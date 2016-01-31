@@ -1,0 +1,39 @@
+Aim: teach and inspire to learn basic programming;
+
+What: interesting, user-friendly game
+
+How: Unity + C#
+
+General description: game, where movements of a player are controlled by dragging and dropping specific blocks, representing pieces of of code, e.g. "goforward" function
+
+
+Must:
+
+See the map split into cells(fields)
+Some cell inaccessible (obstacles) 
+Compose code from drag and drop blocks
+Characters behaviour determined by the code blocks
+Press "Run" button to run code
+Combine "walk", "turn", "if", "while" 
+Complete levels by reaching a point
+Decide on platform (simplest one)
+
+Should:
+
+Add "if else" "do while"
+ Have fancy graphics
+Be able to save game progress
+Display C code + some explanation
+Hint/model answer if stuck
+"Jump", "Attack" functions  Could:
+
+Add "compile" feature 
+Syntax for ifs (determine conditions) 
+Support different languages: Java, C#…
+Several points to reach - rating of how well performed
+Several textures for the environment/player
+When the user steps on certain specific cells, some things would happen in the environment 
+ Won't:
+
+Shouldn't be too complex in terms of programming
+Shouldn't be based on one language
