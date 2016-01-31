@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	Rigidbody2D rbody;
 	Animator anim;
+
+    private float speed = 2.0f;
 	// Use this for initialization
 	void Start () {
 		rbody = GetComponent<Rigidbody2D> ();
@@ -15,6 +17,7 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Vector2 movement_vector = new Vector2 (Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
 		if (movement_vector != Vector2.zero)
 		{
 			anim.SetBool("IsWalking", true);
@@ -26,7 +29,7 @@ public class PlayerMovement : MonoBehaviour {
 			anim.SetBool("IsWalking", false);
 		}
 
-		rbody.MovePosition (rbody.position + movement_vector * Time.deltaTime);
+		rbody.MovePosition (rbody.position + movement_vector * Time.deltaTime * speed);
 	
 
 	}
