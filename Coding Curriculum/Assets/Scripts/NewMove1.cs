@@ -25,20 +25,20 @@ public class NewMove1 : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.A)) {        // Left
            // rigidBody.velocity = new Vector2((float) (-32* 0.032), 0);
-           movementVetor = new Vector2(-32 * 0.032f,0);
+           movementVetor = new Vector2(-32,0);
         }
 		if(Input.GetKey(KeyCode.D)) {        // Right
             //rigidBody.velocity = new Vector2((float) (32* 0.032), 0);
-            movementVetor = new Vector2(32 * 0.032f, 0);
+            movementVetor = new Vector2(32, 0);
         }
 		if(Input.GetKey(KeyCode.W)) {        // Up
             //rigidBody.velocity = new Vector2(0, (float)(32 * 0.032));
-            movementVetor = new Vector2(0, 32 * 0.032f);
+            movementVetor = new Vector2(0, 32);
 
         }
 		if(Input.GetKey(KeyCode.S)) {        // Down
           // rigidBody.velocity = new Vector2(0, (float) (-32 * 0.032));
-            movementVetor = new Vector2(0, -32 * 0.032f);
+            movementVetor = new Vector2(0, -32);
         }
 		//startPosition = transform.position;
         if(!movementVetor.Equals(new Vector2()))
