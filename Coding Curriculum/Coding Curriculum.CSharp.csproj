@@ -60,9 +60,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Workbench\CharacterMovement.cs" />
+    <Compile Include="Assets\Workbench\CodeBlock.cs" />
     <Compile Include="Assets\Workbench\DragAndDrop.cs" />
-    <Compile Include="Assets\Workbench\References.cs" />
     <Compile Include="Assets\Workbench\RunCode.cs" />
+    <Compile Include="Assets\Workbench\SceneReferences.cs" />
+    <Compile Include="Assets\Workbench\Sensors.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

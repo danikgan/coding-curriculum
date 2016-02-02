@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DragAndDrop : MonoBehaviour
 {
-    public References ReferencesScript;
+    public SceneReferences ReferencesScript;
 
     private GameObject DragArea;
     private GameObject DropArea;
