@@ -1,11 +1,12 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Networking.NetworkSystem;
 using Object = System.Object;
 
 public class RunCode : MonoBehaviour
 {
-    public SceneReferences SceneReferencesScript;
+    [NotNull] public SceneReferences SceneReferencesScript;
 
     private GameObject _startProgramCodeBlock;
     private GameObject _player;

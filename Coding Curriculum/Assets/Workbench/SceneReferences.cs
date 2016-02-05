@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using JetBrains.Annotations;
+using UnityEngine;
 
 public class SceneReferences : MonoBehaviour
 {
-    public GameObject DragArea;
-    public GameObject DropArea;
-    public GameObject StartProgramCodeBlock;
-    public GameObject Player;
+    [NotNull] public GameObject DragArea;
+    [NotNull] public GameObject DropArea;
+    [NotNull] public GameObject StartProgramCodeBlock;
+    [NotNull] public GameObject Player;
 }
