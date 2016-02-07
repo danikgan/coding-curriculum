@@ -19,7 +19,9 @@ public class CodeBlock : MonoBehaviour
 
     void Start()
     {
-        if(Type != "Start")
-            GetComponent<BoxCollider2D>().enabled = false;
+        var boxCollider = GetComponent<BoxCollider2D>();
+        boxCollider.size = GetComponent<RectTransform>().sizeDelta;
+        if (Type != "Start")
+            boxCollider.enabled = false;
     }
 }

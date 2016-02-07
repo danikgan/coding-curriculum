@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 
 public class UpdateBlocksPositions : MonoBehaviour
 {
-    private const int Speed = 80;
+    private const int Speed = 100;
     private const int DeltaX = 80;
-    private const int DeltaY = 130;
+    private const int DeltaY = 150;
 
     private struct UpdateObject
     {
@@ -55,7 +55,7 @@ public class UpdateBlocksPositions : MonoBehaviour
                 {
                     var parameter = currentCodeBlockData.ParameterBlock;
                     var parameterPosition = nextPosition;
-                    parameterPosition.y += currentCodeBlock.GetComponent<RectTransform>().sizeDelta.y;
+                    parameterPosition.x += currentCodeBlock.GetComponent<RectTransform>().sizeDelta.x;
                     _updateQueue.Enqueue(new UpdateObject(parameter, parameterPosition));
                 }
 

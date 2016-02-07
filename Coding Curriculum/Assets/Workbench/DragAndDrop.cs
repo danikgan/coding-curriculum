@@ -72,8 +72,9 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         CheckCollisionsWithCodeBlocks();
 
-        //We reactivate the collider of this CodeBlock
-        GetComponent<BoxCollider2D>().enabled = true;
+        //We (re)activate the collider of this CodeBlock if of type Instruction
+        if(_thisCodeBlockData.Type == "Instruction")
+            GetComponent<BoxCollider2D>().enabled = true;
 
         //We also connect the CodeBlock with the other code blocks around it and we update the position of all the code blocks
         AttachPermanently();
@@ -101,9 +102,6 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             y = transform.position.y + rectTransform.sizeDelta.y / 2
         };
 
-        // Camera.main.ScreenToWorldPoint(rectTransform.offsetMin);
-        //var pointB = Camera.main.ScreenToWorldPoint(rectTransform.offsetMax);
-        //pointA.z = pointB.z = 90;
         var touchedColliders = Physics2D.OverlapAreaAll(pointA, pointB);
 
         if (touchedColliders.Length == 0)
@@ -168,7 +166,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             else //Parameter CodeBlock
             {
                 //If none of the two overlapped blocks don't support parameters, the user should get a visual feedback
-                if (thisCodeBlockDataBottom.SupportsParameterBlock || thisCodeBlockDataTop.SupportsParameterBlock)
+                if (!thisCodeBlockDataBottom.SupportsParameterBlock && !thisCodeBlockDataTop.SupportsParameterBlock)
                     //TODO PrintError("Illegal move. Blocks don't supports parameters");
                     Debug.Log("Illegal move. Blocks don't supports parameters");
                 else
@@ -190,8 +188,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                     //If just one block support parameter, we identity that block and we attach the new block to it
                     else
                     {
-                        if (thisCodeBlockDataBottom.SupportsParameterBlock &&
-                            !thisCodeBlockDataTop.SupportsParameterBlock)
+                        if (thisCodeBlockDataBottom.SupportsParameterBlock)
                         {
                             AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
                                 thisCodeBlockDataBottom, false);
@@ -209,7 +206,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         {
             //We can attach it above or below the code block
             AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, thisCodeBlockDataTop,
-                codeBlockColliderTop.gameObject.transform.position.y <= transform.position.y);
+                codeBlockColliderTop.gameObject.transform.position.y > transform.position.y);
         }
     }
 
@@ -237,7 +234,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                     the start block however it is positioned.
                 */
 
-                if ((attachableCodeBlockData.SupportsCompoundStatement &&
+                if ((refCodeBlockData.SupportsCompoundStatement &&
                      transform.position.x > refCodeBlockCollider.gameObject.transform.position.x) ||
                     refCodeBlockData.Type == "Start")
                 {
