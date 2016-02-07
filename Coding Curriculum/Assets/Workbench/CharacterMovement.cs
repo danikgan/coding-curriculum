@@ -14,12 +14,12 @@ public class CharacterMovement : MonoBehaviour {
 
     public void go_forward()
     {
-        
+        Debug.Log("go forward");
     }
 
     public void turn_right()
     {
-
+        Debug.Log("turn right");
     }
 
     public void turn_left()

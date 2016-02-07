@@ -69,6 +69,7 @@
     <Compile Include="Assets\Workbench\RunCode.cs" />
     <Compile Include="Assets\Workbench\SceneReferences.cs" />
     <Compile Include="Assets\Workbench\Sensors.cs" />
+    <Compile Include="Assets\Workbench\UpdateBlocksPositions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,173 +8,262 @@ using UnityEngine.EventSystems;
 public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [NotNull] private SceneReferences _referencesScript;
-
-    private GameObject DragArea;
-    private GameObject DropArea;
-
-    float _deltaX;
-    float _deltaY;
-
-    private Vector3 UpdateCodeBlocks_CurrentHeadPosition;
+    [NotNull] private CodeBlock _thisCodeBlockData;
 
     void Start()
     {
+        _thisCodeBlockData = GetComponent<CodeBlock>();
+        if(!_thisCodeBlockData)
+            Debug.LogError("CodeBlock data can't be accessed");
+
         var mainCamera = GameObject.Find("Main Camera");        //TODO Do the same thing in other classes
         if (mainCamera)
-        {
             _referencesScript = mainCamera.GetComponent<SceneReferences>();
-            if (_referencesScript)
-            {
-                DragArea = _referencesScript.DragArea;
-                DropArea = _referencesScript.DropArea;
-            }
-            else
-                Debug.LogError("ReferencesScript Component not found");
-        }
         else
             Debug.LogError("Main Camera not found");
     }
 
-    public void OnMouseDown()
+#region DragEvents
+
+    public void OnBeginDrag(PointerEventData eventData)     //Start moving the object
     {
-        Debug.Log("bullshit");
-    }
+        //We deactivate the collider of this CodeBlock as we don't want it to appear in CheckCollisionsWithCodeBlocks()
+        GetComponent<BoxCollider2D>().enabled = false;
 
-    public void OnBeginDrag(PointerEventData eventData) //Start moving the object
-    {
-        //dist = Camera.main.WorldToScreenPoint(transform.position);
-        _deltaX = Input.mousePosition.x - eventData.position.x;
-        _deltaY = Input.mousePosition.y - eventData.position.y;
-
-        if (transform.parent != DragArea.transform) return;
-        var thisTransform = Instantiate(transform, transform.position, Quaternion.identity) as Transform;
-        if (thisTransform != null)
-            thisTransform.SetParent(DragArea.transform, false);
-    }
-
-    public void OnDrag(PointerEventData eventData) //Moving the object
-    {
-        //Vector3 curPos = new Vector3(Input.mousePosition.x - _deltaX, Input.mousePosition.y - _deltaY, dist.z);
-        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(curPos);
-
-        var codeBlockData = GetComponent<CodeBlock>();
-        codeBlockData.NextBlock =
-            codeBlockData.PreviousBlock = codeBlockData.ParameterBlock = codeBlockData.HeadOfCompoundStatement = null;
-
-        var newPosition = Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x - _deltaX, eventData.position.y - _deltaY,
-            transform.position.z));
-        transform.position = new Vector3(eventData.position.x,eventData.position.y,transform.position.z);
-
-        var topCorner = new Vector2(newPosition.x - transform.GetComponent<RectTransform>().rect.width/2,
-            newPosition.y - transform.GetComponent<RectTransform>().rect.height/2);
-        var bottomCorner = new Vector2(newPosition.x + transform.GetComponent<RectTransform>().rect.width / 2,
-            newPosition.y + transform.GetComponent<RectTransform>().rect.height / 2);
-        var touchedCollider2Ds = Physics2D.OverlapAreaAll(topCorner, bottomCorner);
-
-        if (touchedCollider2Ds.Length == 0)
+        var dragArea = _referencesScript.DragArea;
+        if (transform.parent != dragArea.transform)
             return;
 
+        var newTransform = Instantiate(transform, transform.localPosition, Quaternion.identity) as Transform;
+        if (newTransform != null)
+            newTransform.SetParent(dragArea.transform, false);
+        else
+            Debug.LogError("New CodeBlock could not be created");
+    }
+
+    public void OnDrag(PointerEventData eventData)         //Moving the object
+    {
+        //Move to the new position
+        var newPosition = new Vector3(eventData.position.x, eventData.position.y, 0);
+        newPosition = Camera.main.ScreenToWorldPoint(newPosition);
+        newPosition.z = transform.position.z;
+        transform.position = newPosition;
+
+        //Now we have to check if our CodeBlock has collided with any other code block
+        //If it has, than we temporarily and unilaterally connect it to the other code blocks
+        CheckCollisionsWithCodeBlocks();
+    }
+
+    public void OnEndDrag(PointerEventData eventData)   //Droping the object
+    {
+        //We check if the CodeBlock has been dropped in the DropArea
+        //If not, we destroy it
+        var dropArea = _referencesScript.DropArea;
+        var dropAreaRectTransform = dropArea.transform.GetComponent<RectTransform>();
+        var dropAreaRect = new Rect(dropAreaRectTransform.offsetMin, dropAreaRectTransform.rect.size);
+        if (!dropAreaRect.Contains(Camera.main.ScreenToWorldPoint(eventData.position)))
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        //Because the object was droped in the DropArea, we assign the DropArea as the parent of this object 
+        transform.SetParent(dropArea.transform);
+
+        CheckCollisionsWithCodeBlocks();
+
+        //We reactivate the collider of this CodeBlock
+        GetComponent<BoxCollider2D>().enabled = true;
+
+        //We also connect the CodeBlock with the other code blocks around it and we update the position of all the code blocks
+        AttachPermanently();
+        dropArea.GetComponent<UpdateBlocksPositions>().UpdatePositions(_referencesScript.StartProgramCodeBlock);
+    }
+
+#endregion
+
+    private void CheckCollisionsWithCodeBlocks()
+    {
+        //The object has moved. Reset all parameters.
+        _thisCodeBlockData.NextBlock = _thisCodeBlockData.PreviousBlock = _thisCodeBlockData.ParameterBlock = _thisCodeBlockData.HeadOfCompoundStatement = null;
+
+        //Next we'll get a list of all the colliders that are in the rectangular area determined by the code blocks we are dragging right now
+        var rectTransform = transform.GetComponent<RectTransform>();
+        var pointA = new Vector2
+        {
+            x = transform.position.x - rectTransform.sizeDelta.x/2,
+            y = transform.position.y - rectTransform.sizeDelta.y/2
+        };
+
+        var pointB = new Vector2
+        {
+            x = transform.position.x + rectTransform.sizeDelta.x / 2,
+            y = transform.position.y + rectTransform.sizeDelta.y / 2
+        };
+
+        // Camera.main.ScreenToWorldPoint(rectTransform.offsetMin);
+        //var pointB = Camera.main.ScreenToWorldPoint(rectTransform.offsetMax);
+        //pointA.z = pointB.z = 90;
+        var touchedColliders = Physics2D.OverlapAreaAll(pointA, pointB);
+
+        if (touchedColliders.Length == 0)
+            return;
+
+        //The next step is to validate the colliders we've hit. The way we are doing this is by using the <CodeBlock> component inside each code block
+        //Also, we are taking into consideration only the two highest (greater y) code blocks
         Collider2D codeBlockColliderTop = null;
         Collider2D codeBlockColliderBottom = null;
-        foreach (var collider in touchedCollider2Ds)
+        foreach (var currentCollider in
+            touchedColliders.Where(currentCollider => currentCollider.gameObject.GetComponent<CodeBlock>()))
         {
-            var gameObjectCodeBlockData = collider.gameObject.GetComponent<CodeBlock>();
-            if (gameObjectCodeBlockData == null || gameObjectCodeBlockData.HeadOfCompoundStatement == null)
-                continue;
-
             if (codeBlockColliderTop == null ||
-                collider.transform.position.y > codeBlockColliderTop.transform.position.y)
+                currentCollider.transform.position.y > codeBlockColliderTop.transform.position.y)
             {
                 codeBlockColliderBottom = codeBlockColliderTop;
-                codeBlockColliderTop = collider;
+                codeBlockColliderTop = currentCollider;
             }
             else
             {
-                if (collider.transform.position.y > codeBlockColliderBottom.transform.position.y)
-                {
-                    codeBlockColliderBottom = collider;
-                }
+                if (codeBlockColliderBottom == null ||
+                    currentCollider.transform.position.y > codeBlockColliderBottom.transform.position.y)
+                    codeBlockColliderBottom = currentCollider;
             }
         }
 
-        if (codeBlockColliderTop == null && codeBlockColliderBottom == null)
+        //In the case in which none of the found colliders are valid, we stop this function
+        if (!codeBlockColliderTop)
             return;
 
-        var codeBlockDataTop = codeBlockColliderTop.gameObject.GetComponent<CodeBlock>();
-        var codeBlockDataBottom = codeBlockColliderBottom.gameObject.GetComponent<CodeBlock>();
+        var thisCodeBlockDataTop = codeBlockColliderTop.gameObject.GetComponent<CodeBlock>();
 
-        if (codeBlockColliderTop && codeBlockColliderBottom)
+        /*
+          We break the solving of the problem into two cases
+          Case 1: two colliders overlapped
+          Case 2: one collider overlapped
+        */
+
+        if (codeBlockColliderTop && codeBlockColliderBottom)    //Two overlapped colliders
         {
-            //TODO Explain what dafaq you've done here
-            if (codeBlockData.Type == "Instruction") // Instruction CodeBlock
+            var thisCodeBlockDataBottom = codeBlockColliderBottom.gameObject.GetComponent<CodeBlock>();
+
+            /*
+              We will now break this case into two sub-cases
+              Case 1: The new block is an Instruction block
+              Case 2: The new block is a Parameter block
+            */
+
+            if (_thisCodeBlockData.Type == "Instruction") // Instruction CodeBlock
             {
-                //When we have two blocks with the same head of compound statement. we put the new block under the top one
+                //When we have two blocks with the same head of compound statement, we put the new block under the top one
                 //If the two blocks have different heads, we attach it to the closest one
-                if (codeBlockDataTop.NextBlock != codeBlockColliderBottom.gameObject &&
+                if (thisCodeBlockDataTop.NextBlock != codeBlockColliderBottom.gameObject &&
                     IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
-                    AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderBottom, codeBlockDataBottom, false);
+                {
+                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom, thisCodeBlockDataBottom,
+                        false);
+                }
                 else
-                    AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderTop, codeBlockDataTop, true);
+                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, thisCodeBlockDataTop, true);
             }
             else //Parameter CodeBlock
             {
-                //TODO Explain what dafaq you've done here
-                if (codeBlockDataBottom.SupportsParameterBlock || codeBlockDataTop.SupportsParameterBlock)
+                //If none of the two overlapped blocks don't support parameters, the user should get a visual feedback
+                if (thisCodeBlockDataBottom.SupportsParameterBlock || thisCodeBlockDataTop.SupportsParameterBlock)
                     //TODO PrintError("Illegal move. Blocks don't supports parameters");
                     Debug.Log("Illegal move. Blocks don't supports parameters");
-                else if (codeBlockDataBottom.SupportsParameterBlock && codeBlockDataTop.SupportsParameterBlock)
-                    if (IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
-                        AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderBottom, codeBlockDataBottom, false);
-                    else
-                        AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderTop, codeBlockDataTop, true);
-                else if (codeBlockDataBottom.SupportsParameterBlock && !codeBlockDataTop.SupportsParameterBlock)
-                    AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderBottom, codeBlockDataBottom, false);
                 else
-                    AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderTop, codeBlockDataTop, true);
+                {
+                    //If both blocks support parameters, then we just add it to the closer one
+                    if (thisCodeBlockDataBottom.SupportsParameterBlock && thisCodeBlockDataTop.SupportsParameterBlock)
+                    {
+                        if (IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
+                        {
+                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
+                                thisCodeBlockDataBottom, false);
+                        }
+                        else
+                        {
+                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, 
+                                thisCodeBlockDataTop, true);
+                        }
+                    }
+                    //If just one block support parameter, we identity that block and we attach the new block to it
+                    else
+                    {
+                        if (thisCodeBlockDataBottom.SupportsParameterBlock &&
+                            !thisCodeBlockDataTop.SupportsParameterBlock)
+                        {
+                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
+                                thisCodeBlockDataBottom, false);
+                        }
+                        else
+                        {
+                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop,
+                                thisCodeBlockDataTop, true);
+                        }
+                    }
+                }
             }
         }
-        else
+        else      //One overlapped collider
         {
-            if (codeBlockColliderTop.gameObject.transform.position.y <= transform.position.y)
-                AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderTop, codeBlockDataTop, true);
-            else
-                AttachTemporarilyToCodeBox(codeBlockData, codeBlockColliderTop, codeBlockDataTop, false);
+            //We can attach it above or below the code block
+            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, thisCodeBlockDataTop,
+                codeBlockColliderTop.gameObject.transform.position.y <= transform.position.y);
         }
     }
 
+    #region AttachFunction
+
     private void AttachTemporarilyToCodeBox(CodeBlock attachableCodeBlockData, Collider2D refCodeBlockCollider,
-        CodeBlock refCodeBlockData, bool AttachUnder)
+        CodeBlock refCodeBlockData, bool attachUnder)
     {
+        /*
+          We will break the problem into two cases
+          Case 1: The new block is an Instruction block
+          Case 2: The new block is a Parameter block
+        */
+
         if (attachableCodeBlockData.Type == "Instruction") //Instruction CodeBlock
         {
-            if (attachableCodeBlockData.SupportsCompoundStatement &&
-                transform.position.x > refCodeBlockCollider.gameObject.transform.position.x)
+            if (attachUnder || refCodeBlockData.Type == "Start")
             {
-                attachableCodeBlockData.NextBlock = refCodeBlockData.FirstBlockInCompoundStatement;
-                attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
-            }
-            else
-            {
-                if (AttachUnder || refCodeBlockData.Type == "Start")
+                /*
+                    If the overlapped codeblock supports a compound statement and the new block is under the 
+                    right half of the overlapped block, then we attach the new block inside the compound statement
+                    as the first block of that compound statement.
+
+                    Also, if the overlapped block is a Start block, we attach the new block as the first block under
+                    the start block however it is positioned.
+                */
+
+                if ((attachableCodeBlockData.SupportsCompoundStatement &&
+                     transform.position.x > refCodeBlockCollider.gameObject.transform.position.x) ||
+                    refCodeBlockData.Type == "Start")
+                {
+                    attachableCodeBlockData.NextBlock = refCodeBlockData.FirstBlockInCompoundStatement;
+                    attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
+                }
+                else
                 {
                     attachableCodeBlockData.PreviousBlock = refCodeBlockCollider.gameObject;
                     attachableCodeBlockData.NextBlock = refCodeBlockData.NextBlock;
                     attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockData.HeadOfCompoundStatement;
                 }
-                else
-                {
-                    attachableCodeBlockData.PreviousBlock = refCodeBlockData.PreviousBlock;
-                    attachableCodeBlockData.NextBlock = refCodeBlockCollider.gameObject;
-                    attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockData.HeadOfCompoundStatement;
-                }
+            }
+            else //AttachUnder == false
+            {
+                //We simply attach the new block above the overlapped one
+                attachableCodeBlockData.PreviousBlock = refCodeBlockData.PreviousBlock;
+                attachableCodeBlockData.NextBlock = refCodeBlockCollider.gameObject;
+                attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockData.HeadOfCompoundStatement;
             }
         }
         else // Parameter CodeBlock
         {
+            //If the overlapped block supports a parameter, then we attach it, otherwise we show some visual feedback to the player
             if (refCodeBlockData.SupportsParameterBlock)
-            {
                 attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
-            }
             else
             {
                 //TODO PrintError("Illegal move. Blocks don't supports parameters");
@@ -184,36 +274,54 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     private void AttachPermanently()
     {
-        var codeBlockData = GetComponent<CodeBlock>();
-
-        if (!(codeBlockData.NextBlock || codeBlockData.PreviousBlock || codeBlockData.HeadOfCompoundStatement))
+        if (!_thisCodeBlockData.NextBlock && !_thisCodeBlockData.PreviousBlock &&
+            !_thisCodeBlockData.HeadOfCompoundStatement)
             return;
 
-        if (codeBlockData.Type == "Instruction")
+        /*
+            We break the problem into two cases
+            1. The new block is an Instruction block
+            2. The new block is a Parameter block
+        */
+
+        if (_thisCodeBlockData.Type == "Instruction") // Instruction CodeBlock
         {
-            if (codeBlockData.PreviousBlock)
+            if (_thisCodeBlockData.PreviousBlock != null)
             {
-                codeBlockData.PreviousBlock.GetComponent<CodeBlock>().NextBlock = gameObject;
+                _thisCodeBlockData.PreviousBlock.GetComponent<CodeBlock>().NextBlock = gameObject;
             }
             else
             {
-                if (codeBlockData.HeadOfCompoundStatement)
+                if (_thisCodeBlockData.HeadOfCompoundStatement != null)
                 {
-                    var headBlockData = codeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+                    var headBlockData = _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
                     headBlockData.FirstBlockInCompoundStatement = gameObject;
+                }
+                else
+                {
+                    Debug.LogError("CodeBlock can't be attached");
                 }
             }
 
-            if (codeBlockData.NextBlock)
+            if (_thisCodeBlockData.NextBlock != null)
             {
-                codeBlockData.NextBlock.GetComponent<CodeBlock>().PreviousBlock = gameObject;
+                _thisCodeBlockData.NextBlock.GetComponent<CodeBlock>().PreviousBlock = gameObject;
             }
         }
-        else
+        else //Parameter CodeBlock
         {
-            codeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().ParameterBlock = gameObject;
+            if (_thisCodeBlockData.HeadOfCompoundStatement != null)
+            {
+                _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().ParameterBlock = gameObject;
+            }
+            else
+            {
+                Debug.LogError("CodeBlock can't be attached");
+            }
         }
     }
+
+    #endregion
 
     private bool IsBottomCloser(Collider2D codeBlockColliderTop, Collider2D codeBlockColliderBottom)
     {
@@ -222,59 +330,5 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         var distBottom = Vector3.Distance(transform.position,
             codeBlockColliderBottom.gameObject.transform.position);
         return distBottom < distTop;
-    }
-
-
-
-    public void OnEndDrag(PointerEventData eventData) //Droping the object
-    {
-        var adjustedPositionTo2D = new Vector3(transform.position.x, transform.position.y, 0);
-
-        if (!DropArea.transform.GetComponent<RectTransform>().rect.Contains(adjustedPositionTo2D))
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        transform.parent = DropArea.transform;
-        AttachPermanently();
-        UpdateCodeBlocks_CurrentHeadPosition = _referencesScript.StartProgramCodeBlock.transform.position;
-        UpdateCodeBlocksPositions(
-            _referencesScript.StartProgramCodeBlock.GetComponent<CodeBlock>().FirstBlockInCompoundStatement);
-    }
-
-    const int speed = 5;
-    const int deltaX = 70;
-    const int deltaY = 200;
-
-    private void UpdateCodeBlocksPositions(GameObject currentCodeBlock)
-    {
-        UpdateCodeBlocks_CurrentHeadPosition.x += deltaX;
-        for (var headBlockData = currentCodeBlock.GetComponent<CodeBlock>();
-            headBlockData;
-            currentCodeBlock = headBlockData.NextBlock,
-                headBlockData = currentCodeBlock ? currentCodeBlock.GetComponent<CodeBlock>() : null)
-        {
-            UpdateCodeBlocks_CurrentHeadPosition.y -= deltaY;
-            var newPosition = currentCodeBlock.transform.position;
-            newPosition.y = UpdateCodeBlocks_CurrentHeadPosition.y;
-            currentCodeBlock.transform.position = Vector3.MoveTowards(currentCodeBlock.transform.position, newPosition,
-                speed*Time.deltaTime);
-
-            if (headBlockData.ParameterBlock)
-            {
-                newPosition = headBlockData.ParameterBlock.transform.position;
-                newPosition.y = UpdateCodeBlocks_CurrentHeadPosition.y;
-                headBlockData.ParameterBlock.transform.position =
-                    Vector3.MoveTowards(headBlockData.ParameterBlock.transform.position, newPosition,
-                        speed*Time.deltaTime);
-            }
-
-            if (headBlockData.FirstBlockInCompoundStatement)
-                UpdateCodeBlocksPositions(headBlockData.FirstBlockInCompoundStatement);
-
-        }
-
-        UpdateCodeBlocks_CurrentHeadPosition.x -= deltaX;
     }
 }

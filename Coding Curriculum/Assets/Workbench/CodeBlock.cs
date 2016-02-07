@@ -8,7 +8,6 @@ public class CodeBlock : MonoBehaviour
     public GameObject PreviousBlock = null;
     public GameObject NextBlock = null;
     public GameObject ParameterBlock = null;
-   // public GameObject ParameterForBlock = null;
     public GameObject FirstBlockInCompoundStatement = null;
     public GameObject HeadOfCompoundStatement = null;
 
@@ -17,4 +16,10 @@ public class CodeBlock : MonoBehaviour
                                                                // "turn_right" , "while", "if", "else", "do_while", "CanGoForward", "StartMain"
     public bool SupportsParameterBlock;
     public bool SupportsCompoundStatement;
+
+    void Start()
+    {
+        if(Type != "Start")
+            GetComponent<BoxCollider2D>().enabled = false;
+    }
 }
