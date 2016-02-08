@@ -14,13 +14,13 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
         _thisCodeBlockData = GetComponent<CodeBlock>();
         if(!_thisCodeBlockData)
-            Debug.LogError("CodeBlock data can't be accessed");
+            Debug.LogError("Error: CodeBlock data can't be accessed");
 
-        var mainCamera = GameObject.Find("Main Camera");        //TODO Do the same thing in other classes
+        var mainCamera = GameObject.Find("Main Camera");
         if (mainCamera)
             _referencesScript = mainCamera.GetComponent<SceneReferences>();
         else
-            Debug.LogError("Main Camera not found");
+            Debug.LogError("Error: Main Camera not found");
     }
 
 #region DragEvents
@@ -52,6 +52,8 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         //Now we have to check if our CodeBlock has collided with any other code block
         //If it has, than we temporarily and unilaterally connect it to the other code blocks
         CheckCollisionsWithCodeBlocks();
+        //TODO: Show some visual feedback if there is an error with the colliders. e.g. the CodeBlock becomes
+        //TODO: red if the colliders are not valid and green if it's ok. If no colliders are found, nothing happens.
     }
 
     public void OnEndDrag(PointerEventData eventData)   //Droping the object
@@ -70,7 +72,15 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         //Because the object was droped in the DropArea, we assign the DropArea as the parent of this object 
         transform.SetParent(dropArea.transform);
 
-        CheckCollisionsWithCodeBlocks();
+        //The next step is to run one final check for collisions
+        //The difference this time is that we also get if there is any error with the collisions and if there is, than we remove the current CodeBlock
+        var collidersError = CheckCollisionsWithCodeBlocks();
+        if (collidersError != null)
+        {
+            Destroy(gameObject);
+            Debug.Log("Positioning error: " + collidersError);     //TODO: Maybe show a message to the user???
+            return;
+        }
 
         //We (re)activate the collider of this CodeBlock if of type Instruction
         if(_thisCodeBlockData.Type == "Instruction")
@@ -83,7 +93,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
 #endregion
 
-    private void CheckCollisionsWithCodeBlocks()
+    private string CheckCollisionsWithCodeBlocks()
     {
         //The object has moved. Reset all parameters.
         _thisCodeBlockData.NextBlock = _thisCodeBlockData.PreviousBlock = _thisCodeBlockData.ParameterBlock = _thisCodeBlockData.HeadOfCompoundStatement = null;
@@ -105,7 +115,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         var touchedColliders = Physics2D.OverlapAreaAll(pointA, pointB);
 
         if (touchedColliders.Length == 0)
-            return;
+            return "Error: No colliders were touched.";
 
         //The next step is to validate the colliders we've hit. The way we are doing this is by using the <CodeBlock> component inside each code block
         //Also, we are taking into consideration only the two highest (greater y) code blocks
@@ -130,9 +140,9 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         //In the case in which none of the found colliders are valid, we stop this function
         if (!codeBlockColliderTop)
-            return;
+            return "Error: No valid colliders were touched.";
 
-        var thisCodeBlockDataTop = codeBlockColliderTop.gameObject.GetComponent<CodeBlock>();
+        var codeBlockDataTop = codeBlockColliderTop.gameObject.GetComponent<CodeBlock>();
 
         /*
           We break the solving of the problem into two cases
@@ -140,9 +150,9 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
           Case 2: one collider overlapped
         */
 
-        if (codeBlockColliderTop && codeBlockColliderBottom)    //Two overlapped colliders
+        if (codeBlockColliderTop && codeBlockColliderBottom) //Two overlapped colliders
         {
-            var thisCodeBlockDataBottom = codeBlockColliderBottom.gameObject.GetComponent<CodeBlock>();
+            var codeBlockDataBottom = codeBlockColliderBottom.gameObject.GetComponent<CodeBlock>();
 
             /*
               We will now break this case into two sub-cases
@@ -154,60 +164,62 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             {
                 //When we have two blocks with the same head of compound statement, we put the new block under the top one
                 //If the two blocks have different heads, we attach it to the closest one
-                if (thisCodeBlockDataTop.NextBlock != codeBlockColliderBottom.gameObject &&
+                if (codeBlockDataTop.NextBlock != codeBlockColliderBottom.gameObject &&
                     IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
                 {
-                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom, thisCodeBlockDataBottom,
+                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom, codeBlockDataBottom,
                         false);
                 }
                 else
-                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, thisCodeBlockDataTop, true);
+                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, codeBlockDataTop, true);
             }
             else //Parameter CodeBlock
             {
                 //If none of the two overlapped blocks don't support parameters, the user should get a visual feedback
-                if (!thisCodeBlockDataBottom.SupportsParameterBlock && !thisCodeBlockDataTop.SupportsParameterBlock)
-                    //TODO PrintError("Illegal move. Blocks don't supports parameters");
-                    Debug.Log("Illegal move. Blocks don't supports parameters");
-                else
+                if (!codeBlockDataBottom.SupportsParameterBlock && !codeBlockDataTop.SupportsParameterBlock)
+                    return "Illegal move. Blocks don't supports parameters";
+
+                //If both blocks support parameters, then we just add it to the closer one
+                if (codeBlockDataBottom.SupportsParameterBlock && codeBlockDataTop.SupportsParameterBlock)
                 {
-                    //If both blocks support parameters, then we just add it to the closer one
-                    if (thisCodeBlockDataBottom.SupportsParameterBlock && thisCodeBlockDataTop.SupportsParameterBlock)
+                    if (IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
                     {
-                        if (IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
-                        {
-                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
-                                thisCodeBlockDataBottom, false);
-                        }
-                        else
-                        {
-                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, 
-                                thisCodeBlockDataTop, true);
-                        }
+                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
+                            codeBlockDataBottom, false);
                     }
-                    //If just one block support parameter, we identity that block and we attach the new block to it
                     else
                     {
-                        if (thisCodeBlockDataBottom.SupportsParameterBlock)
-                        {
-                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
-                                thisCodeBlockDataBottom, false);
-                        }
-                        else
-                        {
-                            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop,
-                                thisCodeBlockDataTop, true);
-                        }
+                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop,
+                            codeBlockDataTop, true);
+                    }
+                }
+                //If just one block support parameter, we identity that block and we attach the new block to it
+                else
+                {
+                    if (codeBlockDataBottom.SupportsParameterBlock)
+                    {
+                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
+                            codeBlockDataBottom, false);
+                    }
+                    else
+                    {
+                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop,
+                            codeBlockDataTop, true);
                     }
                 }
             }
         }
-        else      //One overlapped collider
+        else //One overlapped collider
         {
+            if (_thisCodeBlockData.Type == "Parameter" && !codeBlockDataTop.SupportsParameterBlock)
+                return "Error: Illegal move. Block doesn't supports parameters";
+
             //We can attach it above or below the code block
-            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, thisCodeBlockDataTop,
+            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, codeBlockDataTop,
                 codeBlockColliderTop.gameObject.transform.position.y > transform.position.y);
         }
+
+        return null;
     }
 
     #region AttachFunction
@@ -258,22 +270,15 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         }
         else // Parameter CodeBlock
         {
-            //If the overlapped block supports a parameter, then we attach it, otherwise we show some visual feedback to the player
-            if (refCodeBlockData.SupportsParameterBlock)
-                attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
-            else
-            {
-                //TODO PrintError("Illegal move. Blocks don't supports parameters");
-                Debug.Log("Illegal move. Blocks don't supports parameters");
-            }
+            attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
         }
     }
 
     private void AttachPermanently()
     {
-        if (!_thisCodeBlockData.NextBlock && !_thisCodeBlockData.PreviousBlock &&
+        if (!_thisCodeBlockData.PreviousBlock &&
             !_thisCodeBlockData.HeadOfCompoundStatement)
-            return;
+            Debug.LogError("Error: No block where to attach the current CodeBlock");
 
         /*
             We break the problem into two cases
@@ -287,17 +292,10 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             {
                 _thisCodeBlockData.PreviousBlock.GetComponent<CodeBlock>().NextBlock = gameObject;
             }
-            else
+            else //_thisCodeBlockData.HeadOfCompoundStatement != null
             {
-                if (_thisCodeBlockData.HeadOfCompoundStatement != null)
-                {
-                    var headBlockData = _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
-                    headBlockData.FirstBlockInCompoundStatement = gameObject;
-                }
-                else
-                {
-                    Debug.LogError("CodeBlock can't be attached");
-                }
+                var headBlockData = _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+                headBlockData.FirstBlockInCompoundStatement = gameObject;
             }
 
             if (_thisCodeBlockData.NextBlock != null)
@@ -313,7 +311,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             }
             else
             {
-                Debug.LogError("CodeBlock can't be attached");
+                Debug.LogError("Error: No block where to attach the current CodeBlock");
             }
         }
     }

@@ -40,7 +40,8 @@ public class UpdateBlocksPositions : MonoBehaviour
     {
         var nextPosition = currentCodeBlock.transform.position;
 
-        //Next, we are using a iterative DFS type algorithm to reposition code blocks
+        /*Next, we are using a iterative DFS type algorithm to reposition code blocks*/
+
         while (currentCodeBlock)
         {
             //We move into updating the position of all the following code blocks
@@ -80,10 +81,10 @@ public class UpdateBlocksPositions : MonoBehaviour
                 }
 
                 /*
-                    There is no NextBlock so we've got at the end of the current compound statement
-                    We move to the next block after the head of the current statement as we've already positioned the head block
+                    There is no NextBlock so we've got at the end of the current compound statement.
+                    We move to the next block after the head of the current statement as we've already positioned the head block.
                     If there is no head, that means that we are at the first block (probably a Start block) so we assign null to 
-                    currentCodeBlock so that both While will end
+                    currentCodeBlock so that both WHILE's will end.
                 */
                 currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement
                     ? currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().NextBlock

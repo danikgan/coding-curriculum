@@ -7,13 +7,9 @@ public class Sensors : MonoBehaviour {
 	
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    public bool CanGoForward()
+    public Structs.MultiTypes CanGoForward(Structs.MultiTypes parameter)
     {
-        return true;
+        var returnValue = new Structs.MultiTypes {Bool = true};
+        return returnValue;
     }
 }

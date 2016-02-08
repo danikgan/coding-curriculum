@@ -6,24 +6,22 @@ public class CharacterMovement : MonoBehaviour {
 	void Start () {
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-    public void go_forward()
+    public Structs.MultiTypes go_forward(Structs.MultiTypes parameter)
     {
         Debug.Log("go forward");
+        return new Structs.MultiTypes();
     }
 
-    public void turn_right()
+    public Structs.MultiTypes turn_right(Structs.MultiTypes parameter)
     {
         Debug.Log("turn right");
+        return new Structs.MultiTypes();
     }
 
-    public void turn_left()
+    public Structs.MultiTypes turn_left(Structs.MultiTypes parameter)
     {
-
+        Debug.Log("turn_left");
+        return new Structs.MultiTypes();
     }
 }

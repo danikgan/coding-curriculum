@@ -1,192 +1,170 @@
 ﻿using System;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Networking.NetworkSystem;
-using Object = System.Object;
 
 public class RunCode : MonoBehaviour
 {
-    [NotNull] public SceneReferences SceneReferencesScript;
+    [NotNull] private SceneReferences _referencesScript;
 
     private GameObject _startProgramCodeBlock;
-    private GameObject _player;
-    private CharacterMovement _characterMovement;
-    private Sensors _sensors;
 
     void Start()
     {
-        _startProgramCodeBlock = SceneReferencesScript.StartProgramCodeBlock;
-        _player = SceneReferencesScript.Player;
-        _characterMovement = _player.GetComponent<CharacterMovement>();
-        _sensors = _player.GetComponent<Sensors>();
+        var mainCamera = GameObject.Find("Main Camera");
+        if (mainCamera)
+            _referencesScript = mainCamera.GetComponent<SceneReferences>();
+        else
+            Debug.LogError("Error: Main Camera not found");
+
+        _startProgramCodeBlock = _referencesScript.StartProgramCodeBlock;
     }
 
     void OnMouseDown()
     {
-        RunUserCode();
-    }
-
-    public void RunUserCode()
-    {
-        //_allChildren = _dropArea.transform.Cast<Transform>().Select(t => t.gameObject).ToArray();
-        var startProgramCodeBlockData = _startProgramCodeBlock.GetComponent<CodeBlock>();
-        ParseStatementCodeBlocks(startProgramCodeBlockData.NextBlock);
-    }
-
-    void ParseStatementCodeBlocks(GameObject currentCodeBlock)
-    {
-        var codeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
-        ParseStatementCodeBlocks(codeBlockData);
-    }
-
-    private void ParseStatementCodeBlocks(CodeBlock codeBlockData)
-    {
-        switch (codeBlockData.Meaning)
+        var compilingError = ExecuteCodeBlocks(_startProgramCodeBlock);
+        if (compilingError != null)
         {
-            case "go_forward":
-            {
-                go_forward(codeBlockData);
-                break;
-            }
-
-            case "turn_right":
-            {
-                _characterMovement.turn_right();
-                break;
-            }
-
-            case "turn_left":
-            {
-                _characterMovement.turn_left();
-                break;
-            }
-
-            case "IF":
-            {
-                IF(codeBlockData);
-                break;
-            }
-
-            case "WHILE":
-            {
-                WHILE(codeBlockData);
-                break;
-            }
-            default:
-            {
-                Debug.LogError("Expression not recognized");
-                break;
-            }
+            Debug.Log("Compiling error: " + compilingError); //TODO: Show them to the user
         }
     }
 
-    private void go_forward(CodeBlock codeBlockData)
+    public String ExecuteCodeBlocks(GameObject startCodeBlock)
     {
+        var currentCodeBlock = startCodeBlock.GetComponent<CodeBlock>().FirstBlockInCompoundStatement;
+
+        /*Next, we are using a iterative DFS type algorithm to reposition code blocks*/
+
+        while (currentCodeBlock)
+        {
+            //We move into updating the position of all the following code blocks
+            while (currentCodeBlock)
+            {
+                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+
+                var parameterData = new Structs.MultiTypes();
+                CodeBlock parameterCodeBlock = null;
+                
+                if (currentCodeBlockData.ParameterBlock)
+                {
+                    parameterCodeBlock = currentCodeBlockData.ParameterBlock.GetComponent<CodeBlock>();
+                    if (parameterCodeBlock.EvaluateDelegate != null)
+                        parameterData = parameterCodeBlock.EvaluateDelegate(new Structs.MultiTypes());
+                    else
+                    {
+                        Debug.LogError("Error: No delegate attached");
+                    }
+                }
+
+                if (currentCodeBlockData.Meaning == "while")
+                {
+                    if (parameterCodeBlock)
+                    {
+                        if (parameterData.Bool)
+                        {
+                            //continue with the content of the compound statement attached to the WHILE
+                            currentCodeBlock = currentCodeBlockData.FirstBlockInCompoundStatement;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        return "Error: No condition attached to while";
+                    }
+                }
+
+                if (currentCodeBlockData.Meaning == "if")
+                {
+                    if (parameterCodeBlock)
+                    {
+                        if (parameterData.Bool)
+                        {
+                            //continue with the content of the compound statement attached to the IF
+                            currentCodeBlock = currentCodeBlockData.FirstBlockInCompoundStatement;
+                            continue;
+                        }
+
+                        if (currentCodeBlockData.NextBlock != null)
+                        {
+                            var elseData = currentCodeBlockData.NextBlock.GetComponent<CodeBlock>();
+                            if (elseData.Meaning == "else")
+                            {
+                                //continue with the content of the compound statement attached to the ELSE
+                                currentCodeBlock = elseData.FirstBlockInCompoundStatement;
+                                continue;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return "Error: No condition attached to if";
+                    }
+                }
+
+                if (currentCodeBlock != null && currentCodeBlockData.Meaning != "else")
+                {
+                    if (currentCodeBlockData.EvaluateDelegate != null)
+                        currentCodeBlockData.EvaluateDelegate(parameterData);
+                    else
+                        Debug.LogError("Error: No delegate attached");
+                }
+
+                if (currentCodeBlockData.NextBlock)
+                {
+                    //continue with the next block
+                    currentCodeBlock = currentCodeBlockData.NextBlock;
+                    continue;
+                }
+
+                /*
+                    There is no NextBlock so we've got at the end of the current compound statement.
+                    We check if we were in a repetitive structure because in that case, we need to also check the condition.
+                    To avoid rewriting the code for checking the condition, we will simply set currentCodeBlock to
+                    HeadOfCompoundStatement if HeadOfCompoundStatement is a WHILE and to HeadOfCompoundStatement.NextBlock
+                    if it's not.
+
+                    If there is no head, that means that we are at the first block (a Start block) so we assign null to 
+                    currentCodeBlock so that both While will end
+                */
+
+                var headCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
+                if (headCodeBlock)
+                {
+                    var headCodeBlockData = headCodeBlock.GetComponent<CodeBlock>();
+                    currentCodeBlock = headCodeBlockData.Meaning == "while"
+                        ? headCodeBlock
+                        : headCodeBlockData.NextBlock;
+                    continue;
+                }
+
+                currentCodeBlock = null;
+            }
+        }
+
+        return null;
+    }
+
+
+
+    /*private void go_forward(CodeBlock codeBlockData) //TODO implement this into final code
+    {
+        var number = 1;
         if (codeBlockData.ParameterBlock)
         {
             var parameterCodeBlockData = codeBlockData.ParameterBlock.GetComponent<CodeBlock>();
             if (!parameterCodeBlockData.Meaning.StartsWith("Number"))
                 Debug.LogError(
-                    "Inappropriate parameter for go_forward. The only accepter parameter is a Number Code Block.");
-
+                    "Inappropriate parameter for go_forward. The only accepter parameter is a Number Code Block.");  //TODO: Return it to the user
             try
             {
-                var number = Convert.ToInt32(parameterCodeBlockData.Meaning.Remove(0, 7));
-                for (int i = 1; i < number; i++)
-                    _characterMovement.go_forward();
+                number = Convert.ToInt32(parameterCodeBlockData.Meaning.Remove(0, 7));
             }
             catch (Exception e)
             {
                 Debug.LogError("Failed to extract an integer from a Number Code Block. " + e.Source + " : " + e.Message);
             }
         }
-        else
-        {
+
+        while (number-- != 0)
             _characterMovement.go_forward();
-        }
-    }
-
-    private void IF(CodeBlock codeBlockData)
-    {
-        if (!codeBlockData.ParameterBlock)          
-        {
-            Debug.LogError("No condition available for IF");
-            return;
-        }
-
-        var conditionCodeBlockData = codeBlockData.ParameterBlock.GetComponent<CodeBlock>();
-
-        Object evaluteExpressionFunction = EvaluateExpressionCodeBlock(conditionCodeBlockData);             // ???
-        //The result will be either a Bool or an int or a double, so just use double and represent bool as 1 and 0 if this doesn't work
-       // Object evaluatedConditonCodeBlock = evaluteExpressionFunction;                                      // ???
-
-        if (TurnToBOOL(evaluteExpressionFunction))       //Evaluate IF condition
-        {
-            //Condition evaluated as FALSE. Check if there is an ELSE attached to this IF and run it
-            if (!codeBlockData.NextBlock)
-                return;
-            var getELSE = codeBlockData.NextBlock;
-            var getELSEData = getELSE.GetComponent<CodeBlock>();
-            if (getELSEData.Meaning != "ELSE")      //Check if the next block is an ELSE
-                return;
-
-            //The next block is an ELSE so we'll run the compound statement which has ELSE as its head
-            var firstCodeBlockInCompoundStatement = getELSEData.FirstBlockInCompoundStatement;
-            ParseStatementCodeBlocks(firstCodeBlockInCompoundStatement);
-
-        }
-        else
-        {
-            //Condition evaluated as TRUE. Run the compound statement which has IF as its head
-            var firstCodeBlockInCompoundStatement = codeBlockData.FirstBlockInCompoundStatement;
-            ParseStatementCodeBlocks(firstCodeBlockInCompoundStatement);
-        }
-
-    }
-
-    delegate bool BoolDel();
-
-    private Object EvaluateExpressionCodeBlock(CodeBlock expresionCodeBlockData)
-    {
-        switch (expresionCodeBlockData.Meaning)
-        {
-            case "CanGoForward":
-            {
-                    //return _sensors.CanGoForward();
-                BoolDel canGoForwardDel = _sensors.CanGoForward;
-                return canGoForwardDel;
-            }
-
-            default:
-            {
-                Debug.LogError("Expression not recognized");
-                return new ErrorMessage();
-            }
-        }
-    }
-
-    private static bool TurnToBOOL(Object evaluatedConditonCodeBlock)
-    {
-        return Convert.ToInt32(evaluatedConditonCodeBlock) == 0 || evaluatedConditonCodeBlock == null ||
-               Convert.ToBoolean(evaluatedConditonCodeBlock) == false;
-    }
-
-    private void WHILE(CodeBlock codeBlockData)
-    {
-        if (!codeBlockData.ParameterBlock)
-        {
-            Debug.LogError("No condition available for WHILE");
-            return;
-        }
-
-        var conditionCodeBlockData = codeBlockData.ParameterBlock.GetComponent<CodeBlock>();
-
-        Object evaluteExpressionFunction = EvaluateExpressionCodeBlock(conditionCodeBlockData);             // ???
-       // Object evaluatedConditonCodeBlock = evaluteExpressionFunction;                                      // ???
-
-        while (TurnToBOOL(evaluteExpressionFunction)) //Evaluate WHILE condition
-        {
-            ParseStatementCodeBlocks(codeBlockData.FirstBlockInCompoundStatement);
-        }
-    }
+    }*/
 }
