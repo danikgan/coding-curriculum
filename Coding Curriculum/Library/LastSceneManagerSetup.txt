@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/sunday1.unity
+- path: Assets/Tuesday.unity
   isLoaded: 1
   isActive: 1
