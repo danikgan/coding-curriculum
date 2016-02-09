@@ -8,6 +8,8 @@ public class UpdateBlocksPositions : MonoBehaviour
     private float DeltaX;
     private float DeltaY;
 
+    private SceneReferences _referencesScript;
+
     private struct UpdateObject
     {
         internal GameObject CodeBlock;
@@ -25,7 +27,7 @@ public class UpdateBlocksPositions : MonoBehaviour
     void Start()
     {
         var mainCamera = GameObject.Find("Main Camera");
-        SceneReferences _referencesScript = mainCamera.GetComponent<SceneReferences>();
+        _referencesScript = mainCamera.GetComponent<SceneReferences>();
         var _startProgramCodeBlock = _referencesScript.StartProgramCodeBlock;
         var codeBlockSize = _startProgramCodeBlock.GetComponent<RectTransform>().sizeDelta;
 
@@ -67,7 +69,7 @@ public class UpdateBlocksPositions : MonoBehaviour
                 {
                     var parameter = currentCodeBlockData.ParameterBlock;
                     var parameterPosition = nextPosition;
-                    parameterPosition.x += currentCodeBlock.GetComponent<RectTransform>().sizeDelta.x;
+                    parameterPosition.x += currentCodeBlock.GetComponent<RectTransform>().sizeDelta.x * _referencesScript.MainCanvasScale.x;
                     _updateQueue.Enqueue(new UpdateObject(parameter, parameterPosition));
                 }
 
