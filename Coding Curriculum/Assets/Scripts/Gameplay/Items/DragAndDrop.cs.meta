@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e0e90e332dd07e54bb72522a105a4349
+timeCreated: 1454121611
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - DragArea: {fileID: 171524, guid: ca61426ca43a9774c9e6a5eeb4a3c9c8, type: 2}
+  - DropArea: {fileID: 179062, guid: c4a4c84211c56d94b8cd808c1541af71, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
