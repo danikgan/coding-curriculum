@@ -35,7 +35,7 @@ public class Sensors : MonoBehaviour
         else
             print("You good keep going");
 
-        var returnValue = new Structs.MultiTypes { Bool = collision };
+        var returnValue = new Structs.MultiTypes { Bool = !collision };
         return returnValue;
 
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 
 public class RunCode : MonoBehaviour
@@ -7,6 +6,9 @@ public class RunCode : MonoBehaviour
     [NotNull] private SceneReferences _referencesScript;
 
     private GameObject _startProgramCodeBlock;
+
+    private GameObject PausedExecution_CodeBlock = null;
+    public bool PausedExecution_ReadyToRestart = false;
 
     void Start()
     {
@@ -19,6 +21,16 @@ public class RunCode : MonoBehaviour
         _startProgramCodeBlock = _referencesScript.StartProgramCodeBlock;
     }
 
+    void Update()
+    {
+        if (!PausedExecution_ReadyToRestart || !PausedExecution_CodeBlock) return;
+
+        PausedExecution_ReadyToRestart = false;
+        var codeBlock = PausedExecution_CodeBlock;
+        PausedExecution_CodeBlock = null;
+        ExecuteCodeBlocks(codeBlock);
+    }
+
     void OnMouseDown()
     {
         var compilingError = ExecuteCodeBlocks(_startProgramCodeBlock);
@@ -28,9 +40,10 @@ public class RunCode : MonoBehaviour
         }
     }
 
-    public String ExecuteCodeBlocks(GameObject startCodeBlock)
+    public string ExecuteCodeBlocks(GameObject startCodeBlock)
     {
-        var currentCodeBlock = startCodeBlock.GetComponent<CodeBlock>().FirstBlockInCompoundStatement;
+        var startCodeBlockData = startCodeBlock.GetComponent<CodeBlock>();
+        var currentCodeBlock = startCodeBlockData.Type == "Start" ? startCodeBlockData.FirstBlockInCompoundStatement : startCodeBlock;
 
         /*Next, we are using a iterative DFS type algorithm to reposition code blocks*/
 
@@ -100,12 +113,28 @@ public class RunCode : MonoBehaviour
                     }
                 }
 
-                if (currentCodeBlock != null && currentCodeBlockData.Meaning != "else")
+                if (currentCodeBlock != null && currentCodeBlockData.Meaning != "if" && currentCodeBlockData.Meaning != "else" && currentCodeBlockData.Meaning != "while")
                 {
                     if (currentCodeBlockData.EvaluateDelegate != null)
                         currentCodeBlockData.EvaluateDelegate(parameterData);
                     else
                         Debug.LogError("Error: No delegate attached");
+
+                    if (currentCodeBlockData.Meaning == "go_forward")
+                    {
+                        if (currentCodeBlockData.NextBlock)
+                            PausedExecution_CodeBlock = currentCodeBlockData.NextBlock;
+                        else
+                        {
+                            var gofwd_headCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
+                            var gofwd_headCodeBlockData = gofwd_headCodeBlock.GetComponent<CodeBlock>();
+                            PausedExecution_CodeBlock = gofwd_headCodeBlockData.Meaning == "while"
+                                ? gofwd_headCodeBlock
+                                : gofwd_headCodeBlockData.NextBlock;
+                        }
+                        PausedExecution_ReadyToRestart = false;
+                        return "PausedExecution";
+                    }
                 }
 
                 if (currentCodeBlockData.NextBlock)

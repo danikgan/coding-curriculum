@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Threading;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
@@ -11,11 +11,15 @@ public class CharacterMovement : MonoBehaviour
 
 	public Enumerations.Directions Direction;     //direction of Player's movement
     private AnimationManager _animationManager;
+    private RunCode _runCode;
+    private SceneReferences _sceneReferences;
 
     void Start()
     {
         _animationManager = GetComponent<AnimationManager>();
         Direction = Enumerations.Directions.Down;
+        _sceneReferences = GameObject.Find("Main Camera").GetComponent<SceneReferences>();
+        _runCode = _sceneReferences.RunButton.GetComponent<RunCode>();
 
         Dictionaries.MovementXY = new Dictionary<Enumerations.Directions, Structs.XYpair>
         {
@@ -77,8 +81,11 @@ public class CharacterMovement : MonoBehaviour
 
     private void ChangeDirection(int newDirection)
     {
-        var currentDirectionInt = Convert.ToInt32(Enum.GetName(typeof(Enumerations.Directions), Direction));
-        Direction = (Enumerations.Directions)((currentDirectionInt - newDirection) % 4);
+        var currentDirectionInt = (int) Direction;
+        var newDirectionInt = (currentDirectionInt + newDirection) % 4;
+        if (newDirectionInt < 0)
+            newDirectionInt = 3;
+        Direction = (Enumerations.Directions) newDirectionInt;
         _animationManager.SetAnimation(Direction, false);
     }
 
@@ -105,6 +112,7 @@ public class CharacterMovement : MonoBehaviour
 
         //finished, not moving anymore
         _animationManager.SetAnimation(Direction, false);
+        _runCode.PausedExecution_ReadyToRestart = true;
         yield return 0;
     }
 }

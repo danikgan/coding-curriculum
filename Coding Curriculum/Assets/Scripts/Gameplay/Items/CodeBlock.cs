@@ -72,6 +72,7 @@ public class CodeBlock : MonoBehaviour
         {
             case "CanGoForward":
             {
+                //Delegates.EvaluateDelegateType x = sensors.CanGoForward;
                 return sensors.CanGoForward;
             }
 
