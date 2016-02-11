@@ -45,18 +45,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Framework\Data Types\Delegates.cs" />
-     <Compile Include="Assets\Scripts\Framework\Data Types\Dictionaries.cs" />
-     <Compile Include="Assets\Scripts\Framework\Data Types\Enumerations.cs" />
-     <Compile Include="Assets\Scripts\Framework\Data Types\Structs.cs" />
-     <Compile Include="Assets\Scripts\Framework\RunCode.cs" />
-     <Compile Include="Assets\Scripts\Framework\SceneReferences.cs" />
-     <Compile Include="Assets\Scripts\Framework\UpdateBlocksPositions.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Actors\AnimationManager.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Actors\CharacterMovement.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Actors\Sensors.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Items\CodeBlock.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Items\DragAndDrop.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Framework\Data Types\Delegates.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Framework\Data Types\Dictionaries.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Framework\Data Types\Enumerations.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Framework\Data Types\Structs.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Framework\RunCode.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Framework\SceneReferences.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Framework\UpdateBlocksPositions.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Gameplay\Actors\AnimationManager.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Gameplay\Actors\CharacterMovement.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Gameplay\Actors\Sensors.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Gameplay\Items\CodeBlock.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Gameplay\Items\DragAndDrop.cs" />
      <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
      <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Runtime\SortingLayerExposed.cs" />
      <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Runtime\TileAnimator.cs" />
