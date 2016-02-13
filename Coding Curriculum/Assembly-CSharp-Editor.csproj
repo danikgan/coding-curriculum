@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{EC3C63A5-FADC-EC8F-1111-B3723C07D5E9}</ProjectGuid>
+    <ProjectGuid>{EE29B11C-0767-E1F6-3CF7-EB4133C416BA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -45,31 +45,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\CustomTiledImporterAttribute.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\ICustomTiledImporter.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Material.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Mesh.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Texture.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Xml.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\ImportUtils.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\SortingLayerExposedEditor.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\Tiled2UnityMenuItems.cs" />
-     <Compile Include="Assets\Store Assets\Tiled2Unity\Scripts\Editor\TiledAssetPostProcessor.cs" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Imported\Map3.tiled2unity.xml" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Tiled2Unity.export.txt" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Imported\Map1.tiled2unity.xml" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Imported\Map5.tiled2unity.xml" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Imported\Map4.tiled2unity.xml" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Materials\_ReadMe.txt" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Textures\_ReadMe.txt" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Imported\Map9.tiled2unity.xml" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Imported\Map2.tiled2unity.xml" />
-     <None Include="Assets\Store Assets\Tiled2Unity\License.txt" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Imported\_ReadMe.txt" />
-     <None Include="Assets\Store Assets\Tiled2Unity\Meshes\_ReadMe.txt" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\CustomTiledImporterAttribute.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\ICustomTiledImporter.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Material.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Mesh.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Texture.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.Xml.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\ImportTiled2Unity.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\ImportUtils.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\SortingLayerExposedEditor.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\Tiled2UnityMenuItems.cs" />
+     <Compile Include="Assets\Tiled2Unity\Scripts\Editor\TiledAssetPostProcessor.cs" />
+     <None Include="Assets\Tiled2Unity\Imported\Map3.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
+     <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
+     <None Include="Assets\Tiled2Unity\Tiled2Unity.export.txt" />
+     <None Include="Assets\Tiled2Unity\Imported\Map1.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\Imported\Map5.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\Imported\Map4.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\Materials\_ReadMe.txt" />
+     <None Include="Assets\Tiled2Unity\Textures\_ReadMe.txt" />
+     <None Include="Assets\Tiled2Unity\Imported\level1.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\Imported\Map9.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\Imported\level2.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\Imported\Map2.tiled2unity.xml" />
+     <None Include="Assets\Tiled2Unity\License.txt" />
+     <None Include="Assets\Tiled2Unity\Imported\_ReadMe.txt" />
+     <None Include="Assets\Tiled2Unity\Meshes\_ReadMe.txt" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -118,7 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{A1AEF624-E39C-74B5-6C9B-691A7A913E5A}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{E6C9EF92-3167-549A-5764-9EED518C5E81}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
