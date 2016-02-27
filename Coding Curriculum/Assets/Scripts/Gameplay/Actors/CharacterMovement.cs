@@ -40,7 +40,8 @@ public class CharacterMovement : MonoBehaviour
         _animationManager.SetAnimation(Direction, true);
         StartCoroutine(Movement(transform, newVector));
         Debug.Log("go forward");
-
+        
+        MovementEvents.CheckForPositionEvent();
         return new Structs.MultiTypes();
     }
 
