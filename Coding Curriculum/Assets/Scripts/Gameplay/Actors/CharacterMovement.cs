@@ -41,7 +41,7 @@ public class CharacterMovement : MonoBehaviour
         StartCoroutine(Movement(transform, newVector));
         Debug.Log("go forward");
         
-
+        MovementEvents.CheckForPositionEvent();
         return new Structs.MultiTypes();
     }
 

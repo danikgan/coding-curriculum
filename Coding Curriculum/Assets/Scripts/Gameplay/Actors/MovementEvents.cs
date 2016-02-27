@@ -16,18 +16,9 @@ public class MovementEvents : MonoBehaviour
         _player = _referencesScript.Player;
     }
 
-    public void CheckForPositionEvent()
+    public static void CheckForPositionEvent()
     {
        //TODO: German, implement here Destination
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Reached destination");
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Reached destination");
-    }
 }
