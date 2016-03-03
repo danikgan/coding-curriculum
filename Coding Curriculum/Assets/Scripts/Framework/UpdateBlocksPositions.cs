@@ -37,6 +37,8 @@ public class UpdateBlocksPositions : MonoBehaviour
         Indentation = (BlocksSize.x / 7) /**_referencesScript.MainCanvasScale.x*/;
        // SpaceBetweenBlocks = (codeBlockSize.y - 5) * _referencesScript.MainCanvasScale.y;
         SpaceBetweenBlocks = BlocksSize.y + 10;
+
+        UpdatePositions(_startProgramCodeBlock);
     }
 
     // Update is called once per frame
@@ -111,8 +113,8 @@ public class UpdateBlocksPositions : MonoBehaviour
 
         var neededWidth = numberOfBlocksHorizontally * BlocksSize.x +
                                          (numberOfBlocksHorizontally + 1)*Indentation;
-        var neededHeight = numberOfBlocksVertically * BlocksSize.y +
-                                       (numberOfBlocksVertically + 1)*SpaceBetweenBlocks;
+        var neededHeight = numberOfBlocksVertically*BlocksSize.y +
+                           (numberOfBlocksVertically - 1)*SpaceBetweenBlocks + 2*Indentation;
         
         var outerDropAreaRectTransform = _referencesScript.OuterDropArea.GetComponent<RectTransform>();
         var dropAreaRectTransform = _referencesScript.DropArea.GetComponent<RectTransform>();
@@ -122,7 +124,7 @@ public class UpdateBlocksPositions : MonoBehaviour
         dropAreaRectTransform.sizeDelta = new Vector2(width, height);
 
         var nextPosition = new Vector2(dropAreaRectTransform.rect.xMin + Indentation + BlocksSize.x/2,
-            dropAreaRectTransform.rect.yMax - SpaceBetweenBlocks - BlocksSize.y/2);
+            dropAreaRectTransform.rect.yMax - Indentation - BlocksSize.y/2);
 
         currentCodeBlock = initialBlock;
 
