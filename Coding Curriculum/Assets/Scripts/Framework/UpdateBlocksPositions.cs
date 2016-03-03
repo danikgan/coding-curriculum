@@ -1,14 +1,16 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using JetBrains.Annotations;
 
 public class UpdateBlocksPositions : MonoBehaviour
 {
     private const int Speed = 90;
-    private float Identation;
+    private float Indentation;
     private float SpaceBetweenBlocks;
- 
+    private Vector2 BlocksSize;
+
     private SceneReferences _referencesScript;
 
     private struct UpdateObject
@@ -30,11 +32,11 @@ public class UpdateBlocksPositions : MonoBehaviour
         var mainCamera = GameObject.Find("Main Camera");
         _referencesScript = mainCamera.GetComponent<SceneReferences>();
         var _startProgramCodeBlock = _referencesScript.StartProgramCodeBlock;
-        var codeBlockSize = _startProgramCodeBlock.GetComponent<RectTransform>().sizeDelta;
+        BlocksSize = _startProgramCodeBlock.GetComponent<RectTransform>().sizeDelta;
 
-        Identation = (codeBlockSize.x / 7) /**_referencesScript.MainCanvasScale.x*/;
+        Indentation = (BlocksSize.x / 7) /**_referencesScript.MainCanvasScale.x*/;
        // SpaceBetweenBlocks = (codeBlockSize.y - 5) * _referencesScript.MainCanvasScale.y;
-        SpaceBetweenBlocks = codeBlockSize.y + 10;
+        SpaceBetweenBlocks = BlocksSize.y + 10;
     }
 
     // Update is called once per frame
@@ -55,56 +57,31 @@ public class UpdateBlocksPositions : MonoBehaviour
 
     public void UpdatePositions(GameObject currentCodeBlock)
     {
-        var nextPosition = currentCodeBlock.transform.localPosition;
-        var minX = nextPosition.x;
-        var minY = nextPosition.y;
-        var maxX = nextPosition.x;
-        var maxY = nextPosition.y;
-        var outerDropAreaRectTransform = _referencesScript.OuterDropArea.GetComponent<RectTransform>();
-        var dropAreaRectTransform = _referencesScript.DropArea.GetComponent<RectTransform>();
-        var blockSize = currentCodeBlock.GetComponent<RectTransform>().sizeDelta;
+        float numberOfBlocksHorizontally = 1;
+        float numberOfBlocksVertically = 0;
+        float temp_numberOfBlocksHorizontally = 1;
 
-        /*Next, we are using a iterative DFS type algorithm to reposition code blocks*/
-
+        var initialBlock = currentCodeBlock;
+        
         while (currentCodeBlock)
         {
-            //We move into updating the position of all the following code blocks
+            //We move into all the following code blocks
             while (currentCodeBlock)
             {
-                //We move the current block to the requires position
-                _updateList.Add(new UpdateObject(currentCodeBlock, nextPosition));
-
-                //We check if the DropArea is big enough
-                var height = maxY - minY;
-                var width = maxX - minX;
-                if (height < outerDropAreaRectTransform.sizeDelta.y)
-                    height = outerDropAreaRectTransform.sizeDelta.y;
-                if (width < outerDropAreaRectTransform.sizeDelta.x)
-                    width = outerDropAreaRectTransform.sizeDelta.x;
-                dropAreaRectTransform.sizeDelta = new Vector2(width, height);
-
                 //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
                 var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
                 if (currentCodeBlockData.ParameterBlock)
-                {
-                    var parameter = currentCodeBlockData.ParameterBlock;
-                    var parameterPosition = nextPosition;
-                    parameterPosition.x += blockSize.x + Identation; /** _referencesScript.MainCanvasScale.x*/
-                    _updateList.Add(new UpdateObject(parameter, parameterPosition));
-                    maxX = Math.Max(maxX, parameterPosition.x + blockSize.x);
-                }
+                    numberOfBlocksHorizontally = Math.Max(temp_numberOfBlocksHorizontally+1, numberOfBlocksHorizontally);
 
                 //We update the Y for the next block we'll put (move down)
-                nextPosition.y -= SpaceBetweenBlocks;
-                minY = Math.Min(minY, nextPosition.y - blockSize.y - SpaceBetweenBlocks);
+                numberOfBlocksVertically++;
 
                 //If the current block is the head of a compound statement, then we move to it
                 if (currentCodeBlockData.FirstBlockInCompoundStatement)
                 {
                     currentCodeBlock = currentCodeBlockData.FirstBlockInCompoundStatement;
-                    //We update the X for the next block that we will reposition (move to the right / indentation)
-                    nextPosition.x += Identation;
-                    maxX = Math.Max(maxX, nextPosition.x + blockSize.x + Identation);
+                    temp_numberOfBlocksHorizontally += 0.5f;
+                    numberOfBlocksHorizontally = Math.Max(temp_numberOfBlocksHorizontally, numberOfBlocksHorizontally);
                     //Break the inner While
                     break;
                 }
@@ -126,7 +103,80 @@ public class UpdateBlocksPositions : MonoBehaviour
                     ? currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().NextBlock
                     : null;
                 //Move back to the left / remove extra-indentation
-                nextPosition.x -= Identation;
+                temp_numberOfBlocksHorizontally -= 0.5f;
+                //Break the inner While
+                break;
+            }
+        }
+
+        var neededWidth = numberOfBlocksHorizontally * BlocksSize.x +
+                                         (numberOfBlocksHorizontally + 1)*Indentation;
+        var neededHeight = numberOfBlocksVertically * BlocksSize.y +
+                                       (numberOfBlocksVertically + 1)*SpaceBetweenBlocks;
+        
+        var outerDropAreaRectTransform = _referencesScript.OuterDropArea.GetComponent<RectTransform>();
+        var dropAreaRectTransform = _referencesScript.DropArea.GetComponent<RectTransform>();
+
+        var width = Math.Max(neededWidth, outerDropAreaRectTransform.sizeDelta.x);
+        var height = Math.Max(neededHeight, outerDropAreaRectTransform.sizeDelta.y);
+        dropAreaRectTransform.sizeDelta = new Vector2(width, height);
+
+        var nextPosition = new Vector2(dropAreaRectTransform.rect.xMin + Indentation + BlocksSize.x/2,
+            dropAreaRectTransform.rect.yMax - SpaceBetweenBlocks - BlocksSize.y/2);
+
+        currentCodeBlock = initialBlock;
+
+        /*Next, we are using a iterative DFS type algorithm to reposition code blocks*/
+
+        while (currentCodeBlock)
+        {
+            //We move into updating the position of all the following code blocks
+            while (currentCodeBlock)
+            {
+                //We move the current block to the requires position
+                _updateList.Add(new UpdateObject(currentCodeBlock, nextPosition));
+
+                //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
+                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                if (currentCodeBlockData.ParameterBlock)
+                {
+                    var parameter = currentCodeBlockData.ParameterBlock;
+                    var parameterPosition = nextPosition;
+                    parameterPosition.x += BlocksSize.x + Indentation; /** _referencesScript.MainCanvasScale.x*/
+                    _updateList.Add(new UpdateObject(parameter, parameterPosition));
+                }
+
+                //We update the Y for the next block we'll put (move down)
+                nextPosition.y -= SpaceBetweenBlocks;
+
+                //If the current block is the head of a compound statement, then we move to it
+                if (currentCodeBlockData.FirstBlockInCompoundStatement)
+                {
+                    currentCodeBlock = currentCodeBlockData.FirstBlockInCompoundStatement;
+                    //We update the X for the next block that we will reposition (move to the right / indentation)
+                    nextPosition.x += Indentation;
+                    //Break the inner While
+                    break;
+                }
+
+                if (currentCodeBlockData.NextBlock)
+                {
+                    currentCodeBlock = currentCodeBlockData.NextBlock;
+                    //Continue the inner While
+                    continue;
+                }
+
+                /*
+                    There is no NextBlock so we've got at the end of the current compound statement.
+                    We move to the next block after the head of the current statement as we've already positioned the head block.
+                    If there is no head, that means that we are at the first block (probably a Start block) so we assign null to 
+                    currentCodeBlock so that both WHILE's will end.
+                */
+                currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement
+                    ? currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().NextBlock
+                    : null;
+                //Move back to the left / remove extra-indentation
+                nextPosition.x -= Indentation;
                 //Break the inner While
                 break;
             }
