@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    private const float Speed = 64f;        // Movement speed
-    private const int Size = 32;            // Size of a tile
+    public double Size         // Size of a tile
+    {
+        get { return _sceneReferences.MainCanvasScale.x * 32.0; }
+    }
 
-	public Enumerations.Directions Direction;     //direction of Player's movement
+    private double Speed        // Movement speed
+    {
+        get { return Size*2; }
+    }
+
+    public Enumerations.Directions Direction;     //direction of Player's movement
     private AnimationManager _animationManager;
     private RunCode _runCode;
     private SceneReferences _sceneReferences;
@@ -36,9 +43,9 @@ public class CharacterMovement : MonoBehaviour
             return new Structs.MultiTypes();
 
         var movement = Dictionaries.MovementXY[Direction];
-        var newVector = new Vector2(movement.x, movement.y);
+        var direction = new Vector2(movement.x, movement.y);
         _animationManager.SetAnimation(Direction, true);
-        StartCoroutine(Movement(transform, newVector));
+        StartCoroutine(Movement(transform, direction));
         Debug.Log("go forward");
         
         MovementEvents.CheckForPositionEvent();
@@ -69,23 +76,19 @@ public class CharacterMovement : MonoBehaviour
         _animationManager.SetAnimation(Direction, false);
     }
 
-    public IEnumerator Movement(Transform transform, Vector2 newVector) //TODO refactor this
+    public IEnumerator Movement(Transform playerTransform, Vector2 direction)
     {
-        //performs actual movement
+        double step = 0;
 
-        var startPosition = transform.position; //current position
-        float i = 0;
+        var playerRigidBody = GetComponent<Rigidbody2D>();
+        var startPosition = playerTransform.position; 
+        var endPosition = new Vector2((float) (startPosition.x + direction.x * Size), (float) (startPosition.y + direction.y * Size));
 
-        var rigidBody = GetComponent<Rigidbody2D>(); //access to rigid body component of Player
-
-        var endPosition = new Vector2(startPosition.x + newVector.x*Size, startPosition.y + newVector.y*Size);
-        //where Player will be moved to
-
-        while (i < 1f)
+        while (step <= 1.0)
         {
             //gradual movement from start to end
-            i += Time.deltaTime*(Speed/Size);
-            rigidBody.MovePosition(Vector2.Lerp(startPosition, endPosition, i));
+            step += Time.deltaTime*(Speed/Size);
+            playerRigidBody.MovePosition(Vector2.Lerp(startPosition, endPosition, (float) step));
             yield
                 return null;
         }
