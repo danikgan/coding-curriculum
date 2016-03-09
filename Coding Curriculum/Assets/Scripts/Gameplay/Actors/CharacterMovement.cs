@@ -47,8 +47,7 @@ public class CharacterMovement : MonoBehaviour
         _animationManager.SetAnimation(Direction, true);
         StartCoroutine(Movement(transform, direction));
         Debug.Log("go forward");
-        
-        MovementEvents.CheckForPositionEvent();
+
         return new Structs.MultiTypes();
     }
 
@@ -96,6 +95,7 @@ public class CharacterMovement : MonoBehaviour
         //finished, not moving anymore
         _animationManager.SetAnimation(Direction, false);
         _runCode.PausedExecution_ReadyToRestart = true;
+        MovementEvents.CheckForReachedDestination();
         yield return 0;
     }
 }

@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class MovementEvents : MonoBehaviour
 {
-    private GameObject _player ;
+    private static GameObject _player ;
     private SceneReferences _referencesScript;
 
     void Start ()
@@ -16,9 +17,12 @@ public class MovementEvents : MonoBehaviour
         _player = _referencesScript.Player;
     }
 
-    public static void CheckForPositionEvent()
+    public static void CheckForReachedDestination()
     {
-       //TODO: German, implement here Destination
+        var hitColliders = Physics2D.OverlapPointAll(_player.transform.position);
+        var isAtDestination = hitColliders.Any(hitCollider => hitCollider.gameObject.name.Equals("Finish"));
+        if(isAtDestination)
+            Debug.Log("Player got to destination");
     }
 
 }
