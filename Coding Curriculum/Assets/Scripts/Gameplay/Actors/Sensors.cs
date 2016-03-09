@@ -1,11 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class Sensors : MonoBehaviour
 {
-
-	//Vector3 start; //current position
-	//Vector3 end; //point that is checked for being inside of collider
-	//bool collision; //was there a collsion or not
 	CharacterMovement _movement;
 
 	void Start ()
@@ -13,19 +10,19 @@ public class Sensors : MonoBehaviour
 		_movement = gameObject.GetComponent<CharacterMovement>();
 	}
 
-    public Structs.MultiTypes CanGoForward(Structs.MultiTypes parameter)        //TODO redo this function
-    {
-	    var start = transform.position;
-        var x = Dictionaries.MovementXY[_movement.Direction];
-        var end = start + 32*new Vector3(x.x, x.y, start.z);
-        var colliderHit = Physics2D.Linecast(end, start, 1).collider;
+    public Structs.MultiTypes CanGoForward(Structs.MultiTypes parameter)
+    { 
+	    var startPosition = transform.position;
+        var direction = Dictionaries.MovementXY[_movement.Direction];
+        var endPosition = startPosition + (float) _movement.Size * new Vector3(direction.x, direction.y, startPosition.z);
+
+        var hitColliders = Physics2D.OverlapPointAll(endPosition);
+       
+        return hitColliders.Any(hitCollider => !hitCollider.isTrigger) ? new Structs.MultiTypes { Bool = false} : new Structs.MultiTypes { Bool = true};
+
+        /*  var colliderHit = Physics2D.Linecast(endPosition, startPosition, 1).collider;
         var collision = colliderHit.name != "Player" && !colliderHit.isTrigger;
-
-        print(collision ? "Don't go there boy" : "You good keep going");
-
-        var returnValue = new Structs.MultiTypes { Bool = !collision };
-        return returnValue;
-
+        return new Structs.MultiTypes { Bool = !collision };*/
     }
 
 }

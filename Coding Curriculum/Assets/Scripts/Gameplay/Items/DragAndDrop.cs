@@ -88,7 +88,8 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         //We also connect the CodeBlock with the other code blocks around it and we update the position of all the code blocks
         AttachPermanently();
-        _referencesScript.DropArea.GetComponent<UpdateBlocksPositions>().UpdatePositions(_referencesScript.StartProgramCodeBlock);
+        var updateBlocksPositionsScript = _referencesScript.DropArea.GetComponent<UpdateBlocksPositions>();
+        updateBlocksPositionsScript.UpdatePositions(_referencesScript.StartProgramCodeBlock);
     }
 
 #endregion
