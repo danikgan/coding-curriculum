@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -65,7 +67,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         var outerDropAreaRectTransform = _referencesScript.OuterDropArea.transform.GetComponent<RectTransform>();
         if (!outerDropAreaRectTransform.rect.Contains(transform.localPosition))
         {
-            Destroy(gameObject);
+            RemoveCodeBlock(gameObject);
             return;
         }
 
@@ -77,7 +79,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         var collidersError = CheckCollisionsWithCodeBlocks();
         if (collidersError != null)
         {
-            Destroy(gameObject);
+            RemoveCodeBlock(gameObject);
             Debug.Log("Positioning error: " + collidersError);     //TODO: Maybe show a message to the user???
             return;
         }
@@ -92,7 +94,75 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         updateBlocksPositionsScript.UpdatePositions(_referencesScript.StartProgramCodeBlock);
     }
 
-#endregion
+    private void RemoveCodeBlock(GameObject currentCodeBlock)
+    {
+        var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+        if (currentCodeBlockData.Type.Equals("Parameter"))
+        {
+            currentCodeBlockData.HeadOfCompoundStatement = null;
+            Destroy(currentCodeBlockData);
+            return;
+        }
+
+        if (currentCodeBlockData.HeadOfCompoundStatement)
+        {
+            var headData = currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+        }
+
+        currentCodeBlockData.HeadOfCompoundStatement =
+            currentCodeBlockData.NextBlock = currentCodeBlockData.PreviousBlock = null;
+
+        var gameObjectsToBeDestroyed = new Stack<GameObject>();
+
+        while (currentCodeBlock)
+        { 
+            while (currentCodeBlock)
+            {   
+                gameObjectsToBeDestroyed.Push(currentCodeBlock); 
+
+                //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
+                currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                if (currentCodeBlockData.ParameterBlock)
+                    Destroy(currentCodeBlockData.ParameterBlock);
+
+                //If the current block is the head of a compound statement, then we move to it
+                if (currentCodeBlockData.FirstBlockInCompoundStatement)
+                {
+                    currentCodeBlock = currentCodeBlockData.FirstBlockInCompoundStatement;
+                    //Break the inner While
+                    break;
+                }
+
+                if (currentCodeBlockData.NextBlock)
+                {
+                    currentCodeBlock = currentCodeBlockData.NextBlock;
+                    //Continue the inner While
+                    continue;
+                }
+
+                /*
+                    There is no NextBlock so we've got at the end of the current compound statement.
+                */
+                currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement
+                    ? currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().NextBlock
+                    : null;
+                //Break the inner While
+                break;
+            }
+        }
+
+        while (gameObjectsToBeDestroyed.Count > 0)
+        {
+            var codeBlock = gameObjectsToBeDestroyed.Pop();
+            if (codeBlock != null)
+            {
+                Destroy(codeBlock);
+            }
+        }
+        
+    }
+
+    #endregion
 
     private string CheckCollisionsWithCodeBlocks()
     {
@@ -308,7 +378,9 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         {
             if (_thisCodeBlockData.HeadOfCompoundStatement != null)
             {
-                _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().ParameterBlock = gameObject;
+                var headBlockData = _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+                Destroy(headBlockData.ParameterBlock);
+                headBlockData.ParameterBlock = gameObject;
             }
             else
             {
