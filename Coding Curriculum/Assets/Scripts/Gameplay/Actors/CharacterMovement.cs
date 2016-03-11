@@ -9,6 +9,7 @@ public class CharacterMovement : MonoBehaviour
         get { return _sceneReferences.MainCanvasScale.x * 32.0; }
     }
 
+
     private double Speed        // Movement speed
     {
         get { return Size*2; }
@@ -92,10 +93,11 @@ public class CharacterMovement : MonoBehaviour
                 return null;
         }
 
+
         //finished, not moving anymore
         _animationManager.SetAnimation(Direction, false);
         _runCode.PausedExecution_ReadyToRestart = true;
-        MovementEvents.CheckForReachedDestination();
+		MovementEvents.CheckForReachedDestination();
         yield return 0;
     }
 }
