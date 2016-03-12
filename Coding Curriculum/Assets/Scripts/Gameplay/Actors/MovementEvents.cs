@@ -55,8 +55,11 @@ public class MovementEvents : MonoBehaviour
 	void LevelTransition (){
 		Debug.Log ("transition");
 		int index = SceneManager.GetActiveScene ().buildIndex;
-		Debug.Log (SceneManager.sceneCount + " scenes ");
-		if (SceneManager.sceneCount > index) {
+
+		Debug.Log (SceneManager.sceneCountInBuildSettings + " scenes ");
+		Debug.Log (index);
+
+		if (SceneManager.sceneCountInBuildSettings > index + 1) {
 			Debug.Log ("transition1");
 			SceneManager.LoadScene (index + 1);
 		} else {

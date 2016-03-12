@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
+using UnityEngine.SceneManagement;
 
 public class FadeIn : MonoBehaviour {
 
@@ -10,6 +12,15 @@ public class FadeIn : MonoBehaviour {
 	private float alpha = 1.0f;			// the texture's alpha value between 0 and 1
 	private int fadeDir = -1; // the direction to fade: in = -1 or out = 1
 	private int firstentry = 1;
+	private string path = "/Users/germanmikuski/Documents/UCL/Unity/coding_curriculum/Coding Curriculum/Assets/SaveFiles/save.txt";
+	private string pathmax = "/Users/germanmikuski/Documents/UCL/Unity/coding_curriculum/Coding Curriculum/Assets/SaveFiles/savemax.txt";
+
+	void Awake(){
+
+		System.IO.File.WriteAllText(path, SceneManager.GetActiveScene ().buildIndex.ToString());
+		System.IO.File.WriteAllText(pathmax, SceneManager.GetActiveScene ().buildIndex.ToString());
+
+	}
 
 	void OnGUI()
 	{	
@@ -43,6 +54,7 @@ public class FadeIn : MonoBehaviour {
 	void OnLevelWasLoaded()
 	{
 		firstentry = 1;
+		System.IO.File.WriteAllText(path, SceneManager.GetActiveScene ().buildIndex.ToString());
 		BeginFadeIn();
 	}
 

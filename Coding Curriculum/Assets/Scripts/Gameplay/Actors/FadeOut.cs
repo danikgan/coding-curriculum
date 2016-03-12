@@ -17,7 +17,6 @@ public class FadeOut  : MonoBehaviour {
 			if (alpha == 1) {
 				GUI.DrawTexture (new Rect (0, 0, Screen.width, Screen.height), fadeInTexture);
 			} else {
-				Debug.Log("in gui");
 				// fade out/in the alpha value using a direction, a speed and Time.deltaTime to convert the operation to seconds
 				alpha += fadeDir * fadeSpeed * Time.deltaTime;
 				// force (clamp) the number to be between 0 and 1 because GUI.color uses Alpha values between 0 and 1
