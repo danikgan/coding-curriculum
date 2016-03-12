@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using System.IO; 
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class MainMenu : MonoBehaviour {
 
@@ -36,8 +37,8 @@ public class MainMenu : MonoBehaviour {
 			Debug.Log (level);
 			Debug.Log (num_scenes);
 
-			if (level + 1 > num_scenes || level < 0 || level == null) {
-				SceneManager.LoadScene (1);
+			if (level + 1 > num_scenes || level < 3) {
+				SceneManager.LoadScene ("Level1");
 			} else {
 
 				SceneManager.LoadScene (level);
@@ -47,15 +48,17 @@ public class MainMenu : MonoBehaviour {
 		}
 
 		if (GUI.Button (new Rect (Screen.width * 0.0625f, Screen.height * 0.0625f + Screen.height * (1f / 8) + 20, Screen.width * (1f / 3), Screen.height * (1f / 8)), "Level selector",button_style)) {
-			Debug.Log ("Selector button");
+			SceneManager.LoadScene ("level_selector");
 		}
 
 		if (GUI.Button (new Rect (Screen.width * 0.0625f, Screen.height * 0.0625f + (Screen.height * (1f / 8) + 20)*2, Screen.width * (1f / 3), Screen.height * (1f / 8)), "Tutorial",button_style)) {
-			Debug.Log ("Tutorial button");
+			SceneManager.LoadScene ("tutorial");
 		}
 
 		if (GUI.Button (new Rect (Screen.width * 0.0625f, Screen.height * 0.0625f + (Screen.height * (1f / 8) + 20)*3, Screen.width * (1f / 3), Screen.height * (1f / 8)), "Quit",button_style)) {
-			Debug.Log ("Quit button");
+			//Application.Quit (); //uncomment when the app is compiled
+			EditorApplication.isPlaying = false; //exit play mode
+		
 		}
 
 	}

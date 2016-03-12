@@ -13,12 +13,19 @@ public class FadeIn : MonoBehaviour {
 	private int fadeDir = -1; // the direction to fade: in = -1 or out = 1
 	private int firstentry = 1;
 	private string path = "/Users/germanmikuski/Documents/UCL/Unity/coding_curriculum/Coding Curriculum/Assets/SaveFiles/save.txt";
-	private string pathmax = "/Users/germanmikuski/Documents/UCL/Unity/coding_curriculum/Coding Curriculum/Assets/SaveFiles/savemax.txt";
+	private string maxpath = "/Users/germanmikuski/Documents/UCL/Unity/coding_curriculum/Coding Curriculum/Assets/SaveFiles/savemax.txt";
 
 	void Awake(){
 
-		System.IO.File.WriteAllText(path, SceneManager.GetActiveScene ().buildIndex.ToString());
-		System.IO.File.WriteAllText(pathmax, SceneManager.GetActiveScene ().buildIndex.ToString());
+		System.IO.File.WriteAllText(path, SceneManager.GetActiveScene ().buildIndex.ToString()); //write current level index to save.txt
+
+		StreamReader reader = new StreamReader(maxpath);
+		string maxlevelstring = reader.ReadLine();
+		int maxlevel = int.Parse (maxlevelstring);
+		reader.Close ();
+
+		if(SceneManager.GetActiveScene ().buildIndex > maxlevel) //if current level index if higher then the one in savemax,txt
+		System.IO.File.WriteAllText(maxpath, SceneManager.GetActiveScene ().buildIndex.ToString());
 
 	}
 

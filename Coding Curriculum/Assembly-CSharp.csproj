@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\Gameplay\Items\DragAndDrop.cs" />
      <Compile Include="Assets\Scripts\Menu\LevelSelector.cs" />
      <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
+     <Compile Include="Assets\Scripts\Menu\Tutorial.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\SortingLayerExposed.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\TileAnimator.cs" />

@@ -64,7 +64,7 @@ public class MovementEvents : MonoBehaviour
 			SceneManager.LoadScene (index + 1);
 		} else {
 			Debug.Log ("transition2");
-			SceneManager.LoadScene("VersionAlpha");
+			SceneManager.LoadScene("Level1");
 		}
 	}
 
