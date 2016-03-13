@@ -6,7 +6,7 @@ public class CharacterMovement : MonoBehaviour
 {
     public double Size         // Size of a tile
     {
-        get { return _sceneReferences.MainCanvasScale.x * 32.0; }
+        get { return _sceneReferences.MapScale.x * 32.0; }
     }
 
     private double Speed        // Movement speed
