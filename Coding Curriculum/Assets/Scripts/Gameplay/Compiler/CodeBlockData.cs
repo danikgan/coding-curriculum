@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof (BoxCollider2D))]
 
-public class CodeBlock : MonoBehaviour
+public class CodeBlockData : MonoBehaviour
 {
     public GameObject PreviousBlock = null;
     public GameObject NextBlock = null;

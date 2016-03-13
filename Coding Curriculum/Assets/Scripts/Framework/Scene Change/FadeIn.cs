@@ -12,10 +12,8 @@ public class FadeIn : MonoBehaviour {
 	private float alpha = 1.0f;			// the texture's alpha value between 0 and 1
 	private int fadeDir = -1; // the direction to fade: in = -1 or out = 1
 	private int firstentry = 1;
-	//private string path = "/SaveFiles/save.txt";
     TextAsset SaveFile = Resources.Load("save.txt") as TextAsset;
     static TextAsset SaveMaxFile = Resources.Load("savemax.txt") as TextAsset;
-  //  private string maxpath = SaveMaxFile.
 
 	void Awake(){
 

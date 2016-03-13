@@ -42,7 +42,7 @@ public class RunCode : MonoBehaviour
 
     public string ExecuteCodeBlocks(GameObject startCodeBlock)
     {
-        var startCodeBlockData = startCodeBlock.GetComponent<CodeBlock>();
+        var startCodeBlockData = startCodeBlock.GetComponent<CodeBlockData>();
         var currentCodeBlock = startCodeBlockData.Type == "Start" ? startCodeBlockData.FirstBlockInCompoundStatement : startCodeBlock;
 
         /*Next, we are using a iterative DFS type algorithm to reposition code blocks*/
@@ -52,14 +52,14 @@ public class RunCode : MonoBehaviour
             //We move into updating the position of all the following code blocks
             while (currentCodeBlock)
             {
-                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
 
                 var parameterData = new Structs.MultiTypes();
-                CodeBlock parameterCodeBlock = null;
+                CodeBlockDataparameterCodeBlock = null;
                 
                 if (currentCodeBlockData.ParameterBlock)
                 {
-                    parameterCodeBlock = currentCodeBlockData.ParameterBlock.GetComponent<CodeBlock>();
+                    parameterCodeBlock = currentCodeBlockData.ParameterBlock.GetComponent<CodeBlockData>();
                     if (parameterCodeBlock.EvaluateDelegate != null)
                         parameterData = parameterCodeBlock.EvaluateDelegate(new Structs.MultiTypes());
                     else
@@ -98,7 +98,7 @@ public class RunCode : MonoBehaviour
 
                         if (currentCodeBlockData.NextBlock != null)
                         {
-                            var elseData = currentCodeBlockData.NextBlock.GetComponent<CodeBlock>();
+                            var elseData = currentCodeBlockData.NextBlock.GetComponent<CodeBlockData>();
                             if (elseData.Meaning == "else")
                             {
                                 //continue with the content of the compound statement attached to the ELSE
@@ -127,7 +127,7 @@ public class RunCode : MonoBehaviour
                         else
                         {
                             var gofwd_headCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
-                            var gofwd_headCodeBlockData = gofwd_headCodeBlock.GetComponent<CodeBlock>();
+                            var gofwd_headCodeBlockData = gofwd_headCodeBlock.GetComponent<CodeBlockData>();
                             PausedExecution_CodeBlock = gofwd_headCodeBlockData.Meaning == "while"
                                 ? gofwd_headCodeBlock
                                 : gofwd_headCodeBlockData.NextBlock;
@@ -160,7 +160,7 @@ public class RunCode : MonoBehaviour
                     if (currentCodeBlockData.HeadOfCompoundStatement)
                     {
                         currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
-                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
                         if (currentCodeBlockData.Meaning == "while") break;
                         if (!currentCodeBlockData.NextBlock) continue;
                         currentCodeBlock = currentCodeBlockData.NextBlock;
@@ -189,7 +189,7 @@ public class RunCode : MonoBehaviour
 
 
 
-    /*private void go_forward(CodeBlock codeBlockData) //TODO implement this into final code
+    /*private void go_forward(CodeBlockDatacodeBlockData) //TODO implement this into final code
     {
         var number = 1;
         if (codeBlockData.ParameterBlock)
