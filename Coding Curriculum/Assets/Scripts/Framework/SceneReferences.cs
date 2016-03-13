@@ -8,26 +8,23 @@ public class SceneReferences : MonoBehaviour
     public GameObject OuterDropArea;
     public GameObject StartProgramCodeBlock;
     public GameObject Player;
-    public GameObject MainCanvas;
     public GameObject RunButton;
+    public GameObject Map;
 
-    private RectTransform _mainCanvasRectTransform;
-
-    public Vector3 MainCanvasScale
+    public Vector3 MapScale
     {
-        get { return _mainCanvasRectTransform != null ? _mainCanvasRectTransform.lossyScale : new Vector3(1, 1, 1); }
+        get { return Map.transform != null ? Map.transform.lossyScale : new Vector3(1, 1, 1); }
     }
 
     void Start()
     {
         Player = GameObject.Find("Player");
-        MainCanvas = GameObject.Find("Main Canvas");
         OuterDragArea = GameObject.Find("Outer Drag Area");
         OuterDropArea = GameObject.Find("Outer Drop Area");
         DragArea = GameObject.Find("Drag Area");
         DropArea = GameObject.Find("Drop Area");
         RunButton = GameObject.Find("Run Button");
+        Map = GameObject.Find("Map");
         StartProgramCodeBlock = DropArea.transform.FindChild("StartProgram").gameObject;
-        _mainCanvasRectTransform = MainCanvas.GetComponent<RectTransform>();
     }
 }
