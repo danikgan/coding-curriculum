@@ -78,7 +78,7 @@
     <Compile Include="Assets\Scripts\Gameplay\Actors\CharacterMovement.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\MovementEvents.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\Sensors.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlock.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlockData.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Compiler\DragAndDrop.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Compiler\RunCode.cs" />
     <Compile Include="Assets\Scripts\UI\UpdateBlocksPositions.cs" />

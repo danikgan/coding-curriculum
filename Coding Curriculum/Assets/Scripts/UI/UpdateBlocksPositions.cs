@@ -20,7 +20,7 @@ public class UpdateBlocksPositions : MonoBehaviour
 
         internal UpdateObject(GameObject codeBlock, Vector3 finalPosition)
         {
-            CodeBlock = codeBlock;
+            CodeBlockData= codeBlock;
             FinalPosition = finalPosition;
         }
     }
@@ -73,7 +73,7 @@ public class UpdateBlocksPositions : MonoBehaviour
             while (currentCodeBlock)
             {
                 //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
-                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
                 if (currentCodeBlockData.ParameterBlock)
                     numberOfBlocksHorizontally = Math.Max(temp_numberOfBlocksHorizontally + 1,
                         numberOfBlocksHorizontally);
@@ -111,7 +111,7 @@ public class UpdateBlocksPositions : MonoBehaviour
                     if (currentCodeBlockData.HeadOfCompoundStatement)
                     {
                         currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
-                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
 
                         //Move back to the left / remove extra-indentation
                         temp_numberOfBlocksHorizontally -= 0.5f;
@@ -158,7 +158,7 @@ public class UpdateBlocksPositions : MonoBehaviour
                 _updateList.Add(new UpdateObject(currentCodeBlock, nextPosition));
 
                 //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
-                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
                 if (currentCodeBlockData.ParameterBlock)
                 {
                     var parameter = currentCodeBlockData.ParameterBlock;
@@ -200,7 +200,7 @@ public class UpdateBlocksPositions : MonoBehaviour
                     if (currentCodeBlockData.HeadOfCompoundStatement)
                     {
                         currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
-                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
 
                         //Move back to the left / remove extra-indentation
                         nextPosition.x -= Indentation;

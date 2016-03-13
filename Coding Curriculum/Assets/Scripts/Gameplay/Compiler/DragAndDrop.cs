@@ -3,18 +3,18 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof (CodeBlock))]
+[RequireComponent(typeof (CodeBlockData))]
 
 public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private SceneReferences _referencesScript;
-    private CodeBlock _thisCodeBlockData;
+    private CodeBlockData _thisCodeBlockDataData;
     private UpdateBlocksPositions _updateBlocksPositionsScript;
 
     void Start()
     {
-        _thisCodeBlockData = GetComponent<CodeBlock>();
-        if(!_thisCodeBlockData)
+        _thisCodeBlockDataData = GetComponent<CodeBlockData>();
+        if(!_thisCodeBlockDataData)
             Debug.LogError("Error: CodeBlock data can't be accessed");
 
         var mainCamera = GameObject.Find("Main Camera");
@@ -93,7 +93,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         }
 
         //We (re)activate the collider of this CodeBlock if of type Instruction
-        if(_thisCodeBlockData.Type == "Instruction")
+        if(_thisCodeBlockDataData.Type == "Instruction")
             GetComponent<BoxCollider2D>().enabled = true;
 
         //We also connect the CodeBlock with the other code blocks around it and we update the position of all the code blocks
@@ -103,7 +103,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     private void ExtractCurrentBlock()
     {
-        var currentCodeBlockData = GetComponent<CodeBlock>();
+        var currentCodeBlockData = GetComponent<CodeBlockData>();
 
         if (currentCodeBlockData.ParameterBlock)        //TODO: Improve this. Not at it should be
         {
@@ -113,25 +113,25 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         if (currentCodeBlockData.Type.Equals("Parameter"))
         {
-            currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().ParameterBlock = null;
+            currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlockData>().ParameterBlock = null;
         }
 
         if (currentCodeBlockData.HeadOfCompoundStatement)
         {
-            var headData = currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+            var headData = currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlockData>();
             if (headData.FirstBlockInCompoundStatement == gameObject)
                 headData.FirstBlockInCompoundStatement = currentCodeBlockData.NextBlock;
         }
 
         if (currentCodeBlockData.PreviousBlock)
         {
-            var previousBlockData = currentCodeBlockData.PreviousBlock.GetComponent<CodeBlock>();
+            var previousBlockData = currentCodeBlockData.PreviousBlock.GetComponent<CodeBlockData>();
             previousBlockData.NextBlock = currentCodeBlockData.NextBlock;
         }
 
         if (currentCodeBlockData.NextBlock)
         {
-            var nextBlockData = currentCodeBlockData.NextBlock.GetComponent<CodeBlock>();
+            var nextBlockData = currentCodeBlockData.NextBlock.GetComponent<CodeBlockData>();
             nextBlockData.PreviousBlock = currentCodeBlockData.PreviousBlock;
         }
 
@@ -142,7 +142,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private void RemoveCodeBlock()
     {
         var currentCodeBlock = gameObject;
-        var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+        var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
 
         currentCodeBlockData.HeadOfCompoundStatement =
     currentCodeBlockData.NextBlock = currentCodeBlockData.PreviousBlock = null;
@@ -156,7 +156,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                 gameObjectsToBeDestroyed.Push(currentCodeBlock);
 
                 //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
-                currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
                 if (currentCodeBlockData.ParameterBlock)
                     Destroy(currentCodeBlockData.ParameterBlock);
 
@@ -188,7 +188,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                     if (currentCodeBlockData.HeadOfCompoundStatement)
                     {
                         currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
-                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
                         if (!currentCodeBlockData.NextBlock) continue;
                         currentCodeBlock = currentCodeBlockData.NextBlock;
                         break;
@@ -218,7 +218,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private string CheckCollisionsWithCodeBlocks()
     {
         //The object has moved. Reset all parameters.
-        _thisCodeBlockData.NextBlock = _thisCodeBlockData.PreviousBlock = _thisCodeBlockData.ParameterBlock = _thisCodeBlockData.HeadOfCompoundStatement = null;
+        _thisCodeBlockDataData.NextBlock = _thisCodeBlockDataData.PreviousBlock = _thisCodeBlockDataData.ParameterBlock = _thisCodeBlockDataData.HeadOfCompoundStatement = null;
 
         //Next we'll get a list of all the colliders that are in the rectangular area determined by the code blocks we are dragging right now
         var rectTransform = transform.GetComponent<RectTransform>();
@@ -244,7 +244,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         Collider2D codeBlockColliderTop = null;
         Collider2D codeBlockColliderBottom = null;
         foreach (var currentCollider in
-            touchedColliders.Where(currentCollider => currentCollider.gameObject.GetComponent<CodeBlock>()))
+            touchedColliders.Where(currentCollider => currentCollider.gameObject.GetComponent<CodeBlockData>()))
         {
             if (codeBlockColliderTop == null ||
                 currentCollider.transform.position.y > codeBlockColliderTop.transform.position.y)
@@ -264,7 +264,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if (!codeBlockColliderTop)
             return "Error: No valid colliders were touched.";
 
-        var codeBlockDataTop = codeBlockColliderTop.gameObject.GetComponent<CodeBlock>();
+        var codeBlockDataTop = codeBlockColliderTop.gameObject.GetComponent<CodeBlockData>();
 
         /*
           We break the solving of the problem into two cases
@@ -274,7 +274,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         if (codeBlockColliderTop && codeBlockColliderBottom) //Two overlapped colliders
         {
-            var codeBlockDataBottom = codeBlockColliderBottom.gameObject.GetComponent<CodeBlock>();
+            var codeBlockDataBottom = codeBlockColliderBottom.gameObject.GetComponent<CodeBlockData>();
 
             /*
               We will now break this case into two sub-cases
@@ -282,18 +282,18 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
               Case 2: The new block is a Parameter block
             */
 
-            if (_thisCodeBlockData.Type == "Instruction") // Instruction CodeBlock
+            if (_thisCodeBlockDataData.Type == "Instruction") // Instruction CodeBlock
             {
                 //When we have two blocks with the same head of compound statement, we put the new block under the top one
                 //If the two blocks have different heads, we attach it to the closest one
                 if (codeBlockDataTop.NextBlock != codeBlockColliderBottom.gameObject &&
                     IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
                 {
-                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom, codeBlockDataBottom,
+                    AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderBottom, codeBlockDataBottom,
                         false);
                 }
                 else
-                    AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, codeBlockDataTop, true);
+                    AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderTop, codeBlockDataTop, true);
             }
             else //Parameter CodeBlock
             {
@@ -306,12 +306,12 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                 {
                     if (IsBottomCloser(codeBlockColliderTop, codeBlockColliderBottom))
                     {
-                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
+                        AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderBottom,
                             codeBlockDataBottom, false);
                     }
                     else
                     {
-                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop,
+                        AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderTop,
                             codeBlockDataTop, true);
                     }
                 }
@@ -320,12 +320,12 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                 {
                     if (codeBlockDataBottom.SupportsParameterBlock)
                     {
-                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderBottom,
+                        AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderBottom,
                             codeBlockDataBottom, false);
                     }
                     else
                     {
-                        AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop,
+                        AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderTop,
                             codeBlockDataTop, true);
                     }
                 }
@@ -333,11 +333,11 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         }
         else //One overlapped collider
         {
-            if (_thisCodeBlockData.Type == "Parameter" && !codeBlockDataTop.SupportsParameterBlock)
+            if (_thisCodeBlockDataData.Type == "Parameter" && !codeBlockDataTop.SupportsParameterBlock)
                 return "Error: Illegal move. Block doesn't supports parameters";
 
             //We can attach it above or below the code block
-            AttachTemporarilyToCodeBox(_thisCodeBlockData, codeBlockColliderTop, codeBlockDataTop,
+            AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderTop, codeBlockDataTop,
                 codeBlockColliderTop.gameObject.transform.position.y > transform.position.y);
         }
 
@@ -346,8 +346,8 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     #region AttachFunction
 
-    private void AttachTemporarilyToCodeBox(CodeBlock attachableCodeBlockData, Collider2D refCodeBlockCollider,
-        CodeBlock refCodeBlockData, bool attachUnder)
+    private void AttachTemporarilyToCodeBox(CodeBlockData attachableCodeBlockDataData, Collider2D refCodeBlockCollider,
+        CodeBlockData refCodeBlockDataData, bool attachUnder)
     {
         /*
           We will break the problem into two cases
@@ -355,9 +355,9 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
           Case 2: The new block is a Parameter block
         */
 
-        if (attachableCodeBlockData.Type == "Instruction") //Instruction CodeBlock
+        if (attachableCodeBlockDataData.Type == "Instruction") //Instruction CodeBlock
         {
-            if (attachUnder || refCodeBlockData.Type == "Start")
+            if (attachUnder || refCodeBlockDataData.Type == "Start")
             {
                 /*
                     If the overlapped codeblock supports a compound statement and the new block is under the 
@@ -368,38 +368,38 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                     the start block however it is positioned.
                 */
 
-                if ((refCodeBlockData.SupportsCompoundStatement &&
+                if ((refCodeBlockDataData.SupportsCompoundStatement &&
                      transform.position.x > refCodeBlockCollider.gameObject.transform.position.x) ||
-                    refCodeBlockData.Type == "Start")
+                    refCodeBlockDataData.Type == "Start")
                 {
-                    attachableCodeBlockData.NextBlock = refCodeBlockData.FirstBlockInCompoundStatement;
-                    attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
+                    attachableCodeBlockDataData.NextBlock = refCodeBlockDataData.FirstBlockInCompoundStatement;
+                    attachableCodeBlockDataData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
                 }
                 else
                 {
-                    attachableCodeBlockData.PreviousBlock = refCodeBlockCollider.gameObject;
-                    attachableCodeBlockData.NextBlock = refCodeBlockData.NextBlock;
-                    attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockData.HeadOfCompoundStatement;
+                    attachableCodeBlockDataData.PreviousBlock = refCodeBlockCollider.gameObject;
+                    attachableCodeBlockDataData.NextBlock = refCodeBlockDataData.NextBlock;
+                    attachableCodeBlockDataData.HeadOfCompoundStatement = refCodeBlockDataData.HeadOfCompoundStatement;
                 }
             }
             else //AttachUnder == false
             {
                 //We simply attach the new block above the overlapped one
-                attachableCodeBlockData.PreviousBlock = refCodeBlockData.PreviousBlock;
-                attachableCodeBlockData.NextBlock = refCodeBlockCollider.gameObject;
-                attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockData.HeadOfCompoundStatement;
+                attachableCodeBlockDataData.PreviousBlock = refCodeBlockDataData.PreviousBlock;
+                attachableCodeBlockDataData.NextBlock = refCodeBlockCollider.gameObject;
+                attachableCodeBlockDataData.HeadOfCompoundStatement = refCodeBlockDataData.HeadOfCompoundStatement;
             }
         }
         else // Parameter CodeBlock
         {
-            attachableCodeBlockData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
+            attachableCodeBlockDataData.HeadOfCompoundStatement = refCodeBlockCollider.gameObject;
         }
     }
 
     private void AttachPermanently()
     {
-        if (!_thisCodeBlockData.PreviousBlock &&
-            !_thisCodeBlockData.HeadOfCompoundStatement)
+        if (!_thisCodeBlockDataData.PreviousBlock &&
+            !_thisCodeBlockDataData.HeadOfCompoundStatement)
             Debug.LogError("Error: No block where to attach the current CodeBlock");
 
         /*
@@ -408,28 +408,28 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             2. The new block is a Parameter block
         */
 
-        if (_thisCodeBlockData.Type == "Instruction") // Instruction CodeBlock
+        if (_thisCodeBlockDataData.Type == "Instruction") // Instruction CodeBlock
         {
-            if (_thisCodeBlockData.PreviousBlock != null)
+            if (_thisCodeBlockDataData.PreviousBlock != null)
             {
-                _thisCodeBlockData.PreviousBlock.GetComponent<CodeBlock>().NextBlock = gameObject;
+                _thisCodeBlockDataData.PreviousBlock.GetComponent<CodeBlockData>().NextBlock = gameObject;
             }
             else //_thisCodeBlockData.HeadOfCompoundStatement != null
             {
-                var headBlockData = _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+                var headBlockData = _thisCodeBlockDataData.HeadOfCompoundStatement.GetComponent<CodeBlockData>();
                 headBlockData.FirstBlockInCompoundStatement = gameObject;
             }
 
-            if (_thisCodeBlockData.NextBlock != null)
+            if (_thisCodeBlockDataData.NextBlock != null)
             {
-                _thisCodeBlockData.NextBlock.GetComponent<CodeBlock>().PreviousBlock = gameObject;
+                _thisCodeBlockDataData.NextBlock.GetComponent<CodeBlockData>().PreviousBlock = gameObject;
             }
         }
         else //Parameter CodeBlock
         {
-            if (_thisCodeBlockData.HeadOfCompoundStatement != null)
+            if (_thisCodeBlockDataData.HeadOfCompoundStatement != null)
             {
-                var headBlockData = _thisCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+                var headBlockData = _thisCodeBlockDataData.HeadOfCompoundStatement.GetComponent<CodeBlockData>();
                 Destroy(headBlockData.ParameterBlock);
                 headBlockData.ParameterBlock = gameObject;
             }
