@@ -19,6 +19,7 @@ public class CharacterMovement : MonoBehaviour
     private RunCode _runCode;
     private SceneReferences _sceneReferences;
     private Sensors _sensors;
+    private MovementEvents _movementEvents;
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class CharacterMovement : MonoBehaviour
         _sceneReferences = GameObject.Find("Main Camera").GetComponent<SceneReferences>();
         _runCode = _sceneReferences.RunButton.GetComponent<RunCode>();
         _sensors = GetComponent<Sensors>();
+        _movementEvents = GetComponent<MovementEvents>();
 
         Dictionaries.MovementXY = new Dictionary<Enumerations.Directions, Structs.XYpair>
         {
@@ -95,7 +97,7 @@ public class CharacterMovement : MonoBehaviour
         //finished, not moving anymore
         _animationManager.SetAnimation(Direction, false);
         _runCode.PausedExecution_ReadyToRestart = true;
-        MovementEvents.CheckForReachedDestination();
+        _movementEvents.CheckForReachedDestination();
         yield return 0;
     }
 }

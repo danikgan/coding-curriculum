@@ -12,22 +12,21 @@ public class FadeIn : MonoBehaviour {
 	private float alpha = 1.0f;			// the texture's alpha value between 0 and 1
 	private int fadeDir = -1; // the direction to fade: in = -1 or out = 1
 	private int firstentry = 1;
-	private string path = "/Users/germanmikuski/Documents/UCL/Unity/coding_curriculum/Coding Curriculum/Assets/SaveFiles/save.txt";
-	private string maxpath = "/Users/germanmikuski/Documents/UCL/Unity/coding_curriculum/Coding Curriculum/Assets/SaveFiles/savemax.txt";
+	//private string path = "/SaveFiles/save.txt";
+    TextAsset SaveFile = Resources.Load("save.txt") as TextAsset;
+    static TextAsset SaveMaxFile = Resources.Load("savemax.txt") as TextAsset;
+  //  private string maxpath = SaveMaxFile.
 
 	void Awake(){
 
-		System.IO.File.WriteAllText(path, SceneManager.GetActiveScene ().buildIndex.ToString()); //write current level index to save.txt
-
-		StreamReader reader = new StreamReader(maxpath);
-		string maxlevelstring = reader.ReadLine();
-		int maxlevel = int.Parse (maxlevelstring);
-		reader.Close ();
+		int maxlevel = int.Parse(SaveMaxFile.text);
+     //   SaveFile.
+	    File.WriteAllText(Application.dataPath + "/Assets/SaveFiles/save.txt", SceneManager.GetActiveScene().buildIndex.ToString());
 
 		if(SceneManager.GetActiveScene ().buildIndex > maxlevel) //if current level index if higher then the one in savemax,txt
-		System.IO.File.WriteAllText(maxpath, SceneManager.GetActiveScene ().buildIndex.ToString());
+            File.WriteAllText(Application.dataPath + "/Assets/SaveFiles/savemax.txt", SceneManager.GetActiveScene().buildIndex.ToString());
 
-	}
+    }
 
 	void OnGUI()
 	{	
@@ -61,8 +60,8 @@ public class FadeIn : MonoBehaviour {
 	void OnLevelWasLoaded()
 	{
 		firstentry = 1;
-		System.IO.File.WriteAllText(path, SceneManager.GetActiveScene ().buildIndex.ToString());
-		BeginFadeIn();
+        File.WriteAllText(Application.dataPath + "/Assets/SaveFiles/save.txt", SceneManager.GetActiveScene().buildIndex.ToString());
+        BeginFadeIn();
 	}
 
 	IEnumerator StillPicFirst() {
