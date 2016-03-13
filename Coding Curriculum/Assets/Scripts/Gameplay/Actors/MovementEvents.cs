@@ -7,11 +7,6 @@ public class MovementEvents : MonoBehaviour
 {
     private static GameObject _player ;
     private SceneReferences _referencesScript;
-	static public MovementEvents instance;
-
-	void Awake(){ //called when an instance awakes in the game
-		instance = this; //set our static reference to our newly initialized instance
-	}
 
     void Start ()
     {
@@ -24,15 +19,15 @@ public class MovementEvents : MonoBehaviour
         _player = _referencesScript.Player;
     }
 
-    public static void CheckForReachedDestination()
+    public void CheckForReachedDestination()
     {
         var hitColliders = Physics2D.OverlapPointAll(_player.transform.position);
         var isAtDestination = hitColliders.Any(hitCollider => hitCollider.gameObject.name.Equals("Finish"));
 
 		if (isAtDestination) {
 
-			instance.StartCoroutine (instance.SwitchLevel());
-			instance.StartCoroutine(instance.WaitForKeyDown(KeyCode.Space));
+			StartCoroutine(SwitchLevel());
+			StartCoroutine(WaitForKeyDown(KeyCode.Space));
 		}
     }
 
@@ -49,23 +44,27 @@ public class MovementEvents : MonoBehaviour
 	{
 		while (!Input.GetKeyDown(keyCode))
 			yield return null;
-		instance.LevelTransition ();
+		LevelTransition ();
 	}
 
-	void LevelTransition (){
-		Debug.Log ("transition");
-		int index = SceneManager.GetActiveScene ().buildIndex;
+    static void LevelTransition()
+    {
+        Debug.Log("transition");
+        int index = SceneManager.GetActiveScene().buildIndex;
 
-		Debug.Log (SceneManager.sceneCountInBuildSettings + " scenes ");
-		Debug.Log (index);
+        Debug.Log(SceneManager.sceneCountInBuildSettings + " scenes ");
+        Debug.Log(index);
 
-		if (SceneManager.sceneCountInBuildSettings > index + 1) {
-			Debug.Log ("transition1");
-			SceneManager.LoadScene (index + 1);
-		} else {
-			Debug.Log ("transition2");
-			SceneManager.LoadScene("Level1");
-		}
-	}
+        if (SceneManager.sceneCountInBuildSettings > index + 1)
+        {
+            Debug.Log("transition1");
+            SceneManager.LoadScene(index + 1);
+        }
+        else
+        {
+            Debug.Log("transition2");
+            SceneManager.LoadScene("Level1");
+        }
+    }
 
 }

@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -73,21 +67,21 @@
     <Compile Include="Assets\Scripts\Framework\Data Types\Dictionaries.cs" />
     <Compile Include="Assets\Scripts\Framework\Data Types\Enumerations.cs" />
     <Compile Include="Assets\Scripts\Framework\Data Types\Structs.cs" />
-    <Compile Include="Assets\Scripts\Framework\RunCode.cs" />
+    <Compile Include="Assets\Scripts\Framework\Menu\LevelSelector.cs" />
+    <Compile Include="Assets\Scripts\Framework\Menu\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\Framework\Menu\Tutorial.cs" />
+    <Compile Include="Assets\Scripts\Framework\Scene Change\Fade.cs" />
+    <Compile Include="Assets\Scripts\Framework\Scene Change\FadeIn.cs" />
+    <Compile Include="Assets\Scripts\Framework\Scene Change\FadeOut.cs" />
     <Compile Include="Assets\Scripts\Framework\SceneReferences.cs" />
-    <Compile Include="Assets\Scripts\Framework\UpdateBlocksPositions.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\AnimationManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\CharacterMovement.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Actors\Fade.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Actors\FadeIn.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Actors\FadeOut.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\MovementEvents.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\Sensors.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Items\CodeBlock.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Items\DragAndDrop.cs" />
-    <Compile Include="Assets\Scripts\Menu\LevelSelector.cs" />
-    <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
-    <Compile Include="Assets\Scripts\Menu\Tutorial.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlock.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Compiler\DragAndDrop.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Compiler\RunCode.cs" />
+    <Compile Include="Assets\Scripts\UI\UpdateBlocksPositions.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\SortingLayerExposed.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\TileAnimator.cs" />
