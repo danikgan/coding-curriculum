@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,8 +7,9 @@ using UnityEngine.EventSystems;
 
 public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [NotNull] private SceneReferences _referencesScript;
-    [NotNull] private CodeBlock _thisCodeBlockData;
+    private SceneReferences _referencesScript;
+    private CodeBlock _thisCodeBlockData;
+    private UpdateBlocksPositions _updateBlocksPositionsScript;
 
     void Start()
     {
@@ -23,24 +22,33 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             _referencesScript = mainCamera.GetComponent<SceneReferences>();
         else
             Debug.LogError("Error: Main Camera not found");
+        _updateBlocksPositionsScript = _referencesScript.DropArea.GetComponent<UpdateBlocksPositions>();
     }
 
 #region DragEvents
 
-    public void OnBeginDrag(PointerEventData eventData)     //Start moving the object
+    public void OnBeginDrag(PointerEventData eventData) //Start moving the object
     {
         //We deactivate the collider of this CodeBlock as we don't want it to appear in CheckCollisionsWithCodeBlocks()
         GetComponent<BoxCollider2D>().enabled = false;
 
         var dragArea = _referencesScript.DragArea;
-        if (transform.parent != dragArea.transform)
-            return;
 
-        var newTransform = Instantiate(transform, transform.localPosition, Quaternion.identity) as Transform;
-        if (newTransform != null)
-            newTransform.SetParent(dragArea.transform, false);
+        if (transform.parent == dragArea.transform)
+        {
+            var newTransform = Instantiate(transform, transform.localPosition, Quaternion.identity) as Transform;
+            if (newTransform != null)
+            {
+                newTransform.SetParent(transform.parent, false);
+
+            }
+            else
+                Debug.LogError("New CodeBlock could not be created");
+        }
         else
-            Debug.LogError("New CodeBlock could not be created");
+        {
+            ExtractCurrentBlock();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)         //Moving the object
@@ -63,11 +71,11 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         //We assign the object to the OuterDropArea so that we can easier calculate his position
         transform.SetParent(_referencesScript.OuterDropArea.transform);
 
-        //We check if the CodeBlock has been dropped in the OuterDropArea. If not, we destroy it
-        var outerDropAreaRectTransform = _referencesScript.OuterDropArea.transform.GetComponent<RectTransform>();
-        if (!outerDropAreaRectTransform.rect.Contains(transform.localPosition))
+        //We check if the CodeBlock has been dropped in the DropArea. If not, we destroy it
+        var dropAreaRectTransform = _referencesScript.DropArea.transform.GetComponent<RectTransform>();
+        if (!dropAreaRectTransform.rect.Contains(transform.localPosition))
         {
-            RemoveCodeBlock(gameObject);
+            RemoveCodeBlock();
             return;
         }
 
@@ -79,7 +87,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         var collidersError = CheckCollisionsWithCodeBlocks();
         if (collidersError != null)
         {
-            RemoveCodeBlock(gameObject);
+            RemoveCodeBlock();
             Debug.Log("Positioning error: " + collidersError);     //TODO: Maybe show a message to the user???
             return;
         }
@@ -90,35 +98,62 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         //We also connect the CodeBlock with the other code blocks around it and we update the position of all the code blocks
         AttachPermanently();
-        var updateBlocksPositionsScript = _referencesScript.DropArea.GetComponent<UpdateBlocksPositions>();
-        updateBlocksPositionsScript.UpdatePositions(_referencesScript.StartProgramCodeBlock);
+        _updateBlocksPositionsScript.UpdatePositions(_referencesScript.StartProgramCodeBlock);
     }
 
-    private void RemoveCodeBlock(GameObject currentCodeBlock)
+    private void ExtractCurrentBlock()
     {
-        var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+        var currentCodeBlockData = GetComponent<CodeBlock>();
+
+        if (currentCodeBlockData.ParameterBlock)        //TODO: Improve this. Not at it should be
+        {
+            Destroy(currentCodeBlockData.ParameterBlock);   
+            currentCodeBlockData.ParameterBlock = null;
+        }
+
         if (currentCodeBlockData.Type.Equals("Parameter"))
         {
-            currentCodeBlockData.HeadOfCompoundStatement = null;
-            Destroy(currentCodeBlockData);
-            return;
+            currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().ParameterBlock = null;
         }
 
         if (currentCodeBlockData.HeadOfCompoundStatement)
         {
             var headData = currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>();
+            if (headData.FirstBlockInCompoundStatement == gameObject)
+                headData.FirstBlockInCompoundStatement = currentCodeBlockData.NextBlock;
+        }
+
+        if (currentCodeBlockData.PreviousBlock)
+        {
+            var previousBlockData = currentCodeBlockData.PreviousBlock.GetComponent<CodeBlock>();
+            previousBlockData.NextBlock = currentCodeBlockData.NextBlock;
+        }
+
+        if (currentCodeBlockData.NextBlock)
+        {
+            var nextBlockData = currentCodeBlockData.NextBlock.GetComponent<CodeBlock>();
+            nextBlockData.PreviousBlock = currentCodeBlockData.PreviousBlock;
         }
 
         currentCodeBlockData.HeadOfCompoundStatement =
             currentCodeBlockData.NextBlock = currentCodeBlockData.PreviousBlock = null;
+    }
+
+    private void RemoveCodeBlock()
+    {
+        var currentCodeBlock = gameObject;
+        var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+
+        currentCodeBlockData.HeadOfCompoundStatement =
+    currentCodeBlockData.NextBlock = currentCodeBlockData.PreviousBlock = null;
 
         var gameObjectsToBeDestroyed = new Stack<GameObject>();
 
         while (currentCodeBlock)
-        { 
+        {
             while (currentCodeBlock)
-            {   
-                gameObjectsToBeDestroyed.Push(currentCodeBlock); 
+            {
+                gameObjectsToBeDestroyed.Push(currentCodeBlock);
 
                 //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
                 currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
@@ -140,12 +175,27 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                     continue;
                 }
 
-                /*
+                /*  
                     There is no NextBlock so we've got at the end of the current compound statement.
+                    We move to the next block after the head of the current statement as we've already solved the head block.
+                    If there is no head block, that means that we are at the first block (probably a Start block) so we assign
+                    null to currentCodeBlock so that both WHILE's will end.
+                    If there is a head block but no NextBlock, it means that the head is itself at the end of a compound statement
+                    so we move repeatedly to its head until we find a head block with a NextBlock or until we get to the first block
                 */
-                currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement
-                    ? currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().NextBlock
-                    : null;
+                while (true)
+                {
+                    if (currentCodeBlockData.HeadOfCompoundStatement)
+                    {
+                        currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                        if (!currentCodeBlockData.NextBlock) continue;
+                        currentCodeBlock = currentCodeBlockData.NextBlock;
+                        break;
+                    }
+                    currentCodeBlock = null;
+                    break;
+                }
                 //Break the inner While
                 break;
             }
@@ -159,7 +209,8 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                 Destroy(codeBlock);
             }
         }
-        
+
+        _updateBlocksPositionsScript.UpdatePositions(_referencesScript.StartProgramCodeBlock);
     }
 
     #endregion

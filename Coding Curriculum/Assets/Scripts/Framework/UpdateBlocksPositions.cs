@@ -47,13 +47,15 @@ public class UpdateBlocksPositions : MonoBehaviour
         for (var index = 0; index < _updateList.Count; index++)
         {
             var currentObject = _updateList[index];
-            currentObject.CodeBlock.transform.localPosition = Vector3.MoveTowards(currentObject.CodeBlock.transform.localPosition, currentObject.FinalPosition, Speed*Time.deltaTime);
-
             if (currentObject.CodeBlock.transform.localPosition == currentObject.FinalPosition)
             {
                 _updateList.RemoveAt(index);
                 index--;
             }
+            else
+                currentObject.CodeBlock.transform.localPosition =
+                    Vector3.MoveTowards(currentObject.CodeBlock.transform.localPosition, currentObject.FinalPosition,
+                        Speed*Time.deltaTime);
         }
     }
 
@@ -64,7 +66,7 @@ public class UpdateBlocksPositions : MonoBehaviour
         float temp_numberOfBlocksHorizontally = 1;
 
         var initialBlock = currentCodeBlock;
-        
+
         while (currentCodeBlock)
         {
             //We move into all the following code blocks
@@ -73,7 +75,8 @@ public class UpdateBlocksPositions : MonoBehaviour
                 //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
                 var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
                 if (currentCodeBlockData.ParameterBlock)
-                    numberOfBlocksHorizontally = Math.Max(temp_numberOfBlocksHorizontally+1, numberOfBlocksHorizontally);
+                    numberOfBlocksHorizontally = Math.Max(temp_numberOfBlocksHorizontally + 1,
+                        numberOfBlocksHorizontally);
 
                 //We update the Y for the next block we'll put (move down)
                 numberOfBlocksVertically++;
@@ -98,30 +101,46 @@ public class UpdateBlocksPositions : MonoBehaviour
                 /*
                     There is no NextBlock so we've got at the end of the current compound statement.
                     We move to the next block after the head of the current statement as we've already positioned the head block.
-                    If there is no head, that means that we are at the first block (probably a Start block) so we assign null to 
-                    currentCodeBlock so that both WHILE's will end.
+                    If there is no head block, that means that we are at the first block (probably a Start block) so we assign 
+                    null to currentCodeBlock so that both WHILE's will end.
+                    If there is a head block but no NextBlock, it means that the head is itself at the end of a compound statement
+                    so we move repeatedly to its head until we find a head block with a NextBlock or until we get to the first block
                 */
-                currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement
-                    ? currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().NextBlock
-                    : null;
-                //Move back to the left / remove extra-indentation
-                temp_numberOfBlocksHorizontally -= 0.5f;
+                while (true)
+                {
+                    if (currentCodeBlockData.HeadOfCompoundStatement)
+                    {
+                        currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+
+                        //Move back to the left / remove extra-indentation
+                        temp_numberOfBlocksHorizontally -= 0.5f;
+
+                        if (!currentCodeBlockData.NextBlock) continue;
+                        currentCodeBlock = currentCodeBlockData.NextBlock;
+                        break;
+                    }
+                    currentCodeBlock = null;
+                    break;
+                }
+
                 //Break the inner While
                 break;
             }
         }
 
-        var neededWidth = numberOfBlocksHorizontally * BlocksSize.x +
-                                         (numberOfBlocksHorizontally + 1)*Indentation;
+        var neededWidth = numberOfBlocksHorizontally*BlocksSize.x +
+                          (numberOfBlocksHorizontally + 1)*Indentation;
         var neededHeight = numberOfBlocksVertically*BlocksSize.y +
                            (numberOfBlocksVertically - 1)*SpaceBetweenBlocks + 2*Indentation;
-        
+
         var outerDropAreaRectTransform = _referencesScript.OuterDropArea.GetComponent<RectTransform>();
         var dropAreaRectTransform = _referencesScript.DropArea.GetComponent<RectTransform>();
 
         var width = Math.Max(neededWidth, outerDropAreaRectTransform.sizeDelta.x);
         var height = Math.Max(neededHeight, outerDropAreaRectTransform.sizeDelta.y);
         dropAreaRectTransform.sizeDelta = new Vector2(width, height);
+        dropAreaRectTransform.position = dropAreaRectTransform.parent.position;
 
         var nextPosition = new Vector2(dropAreaRectTransform.rect.xMin + Indentation + BlocksSize.x/2,
             dropAreaRectTransform.rect.yMax - Indentation - BlocksSize.y/2);
@@ -171,14 +190,29 @@ public class UpdateBlocksPositions : MonoBehaviour
                 /*
                     There is no NextBlock so we've got at the end of the current compound statement.
                     We move to the next block after the head of the current statement as we've already positioned the head block.
-                    If there is no head, that means that we are at the first block (probably a Start block) so we assign null to 
-                    currentCodeBlock so that both WHILE's will end.
+                    If there is no head block, that means that we are at the first block (probably a Start block) so we assign 
+                    null to currentCodeBlock so that both WHILE's will end.
+                    If there is a head block but no NextBlock, it means that the head is itself at the end of a compound statement
+                    so we move repeatedly to its head until we find a head block with a NextBlock or until we get to the first block
                 */
-                currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement
-                    ? currentCodeBlockData.HeadOfCompoundStatement.GetComponent<CodeBlock>().NextBlock
-                    : null;
-                //Move back to the left / remove extra-indentation
-                nextPosition.x -= Indentation;
+                while (true)
+                {
+                    if (currentCodeBlockData.HeadOfCompoundStatement)
+                    {
+                        currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+
+                        //Move back to the left / remove extra-indentation
+                        nextPosition.x -= Indentation;
+
+                        if (!currentCodeBlockData.NextBlock) continue;
+                        currentCodeBlock = currentCodeBlockData.NextBlock;
+                        break;
+                    }
+                    currentCodeBlock = null;
+                    break;
+                } 
+
                 //Break the inner While
                 break;
             }
