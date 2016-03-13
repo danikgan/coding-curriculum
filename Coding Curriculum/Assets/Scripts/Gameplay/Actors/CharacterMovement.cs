@@ -6,9 +6,8 @@ public class CharacterMovement : MonoBehaviour
 {
     public double Size         // Size of a tile
     {
-        get { return _sceneReferences.MainCanvasScale.x * 32.0; }
+        get { return _sceneReferences.MapScale.x * 32.0; }
     }
-
 
     private double Speed        // Movement speed
     {
@@ -93,11 +92,10 @@ public class CharacterMovement : MonoBehaviour
                 return null;
         }
 
-
         //finished, not moving anymore
         _animationManager.SetAnimation(Direction, false);
         _runCode.PausedExecution_ReadyToRestart = true;
-		MovementEvents.CheckForReachedDestination();
+        MovementEvents.CheckForReachedDestination();
         yield return 0;
     }
 }

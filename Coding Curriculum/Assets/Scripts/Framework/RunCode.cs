@@ -155,7 +155,22 @@ public class RunCode : MonoBehaviour
                     currentCodeBlock so that both While will end
                 */
 
-                var headCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
+                while (true)
+                {
+                    if (currentCodeBlockData.HeadOfCompoundStatement)
+                    {
+                        currentCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
+                        currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlock>();
+                        if (currentCodeBlockData.Meaning == "while") break;
+                        if (!currentCodeBlockData.NextBlock) continue;
+                        currentCodeBlock = currentCodeBlockData.NextBlock;
+                        break;
+                    }
+                    currentCodeBlock = null;
+                    break;
+                }
+
+             /*   var headCodeBlock = currentCodeBlockData.HeadOfCompoundStatement;
                 if (headCodeBlock)
                 {
                     var headCodeBlockData = headCodeBlock.GetComponent<CodeBlock>();
@@ -165,7 +180,7 @@ public class RunCode : MonoBehaviour
                     continue;
                 }
 
-                currentCodeBlock = null;
+                currentCodeBlock = null;*/
             }
         }
 
