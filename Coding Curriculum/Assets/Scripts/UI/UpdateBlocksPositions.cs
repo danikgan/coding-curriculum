@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using JetBrains.Annotations;
 
 public class UpdateBlocksPositions : MonoBehaviour
@@ -20,7 +19,7 @@ public class UpdateBlocksPositions : MonoBehaviour
 
         internal UpdateObject(GameObject codeBlock, Vector3 finalPosition)
         {
-            CodeBlockData= codeBlock;
+            CodeBlock = codeBlock;
             FinalPosition = finalPosition;
         }
     }
