@@ -55,7 +55,7 @@ public class RunCode : MonoBehaviour
                 var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
 
                 var parameterData = new Structs.MultiTypes();
-                CodeBlockDataparameterCodeBlock = null;
+                CodeBlockData parameterCodeBlock = null;
                 
                 if (currentCodeBlockData.ParameterBlock)
                 {
