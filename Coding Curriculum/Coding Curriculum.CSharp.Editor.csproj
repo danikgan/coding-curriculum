@@ -143,7 +143,15 @@
     <None Include="Assets\Tiled2Unity\Imported\Map9.tiled2unity.xml" />
     <None Include="Assets\Tiled2Unity\Imported\_ReadMe.txt" />
     <None Include="Assets\Tiled2Unity\Imported\level1.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level10.tiled2unity.xml" />
     <None Include="Assets\Tiled2Unity\Imported\level2.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level3.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level4.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level5.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level6.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level7.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level8.tiled2unity.xml" />
+    <None Include="Assets\Tiled2Unity\Imported\level9.tiled2unity.xml" />
     <None Include="Assets\Tiled2Unity\License.txt" />
     <None Include="Assets\Tiled2Unity\Materials\_ReadMe.txt" />
     <None Include="Assets\Tiled2Unity\Meshes\_ReadMe.txt" />
