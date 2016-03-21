@@ -183,4 +183,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b175182bf124761bf18d4cafd73134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  background: {fileID: 2800000, guid: 6b4ac01f42ecd4cc09f4f64612d35923, type: 3}
+  main_menu_skin: {fileID: 11400000, guid: a2e9132b23e48467fa0f42ab9b4ff95c, type: 2}
+  background: {fileID: 2800000, guid: ae11d320cc08f43d5b1dcc332c7b89d4, type: 3}
+  header: {fileID: 2800000, guid: 1ad34df9c07254567979c1d2db603fce, type: 3}
