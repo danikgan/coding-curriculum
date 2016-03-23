@@ -3,7 +3,6 @@ using System.Collections;
 using System.Text;
 using System.IO; 
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 public class MainMenu : MonoBehaviour {
 
@@ -11,13 +10,27 @@ public class MainMenu : MonoBehaviour {
 	public Texture background; //main background
 	public Texture header; //main background
 
-	private string path;
+	private string SaveFilePath;
+	private string SaveMaxFilePath;
+
 	private int num_scenes;
 
 	void Awake(){
 
-	path = Application.dataPath + "/SaveFiles/save.txt"; //path to save.txt file
+		SaveFilePath = Application.persistentDataPath + "/save.txt"; //strings to specify paths to save files
+		SaveMaxFilePath = Application.persistentDataPath + "/savemax.txt";
 
+		Debug.Log (SaveFilePath);
+
+		if (!System.IO.File.Exists(SaveFilePath)) //check if save file exists
+		{
+			System.IO.File.WriteAllText(SaveFilePath, "0");
+		}
+
+		if (!System.IO.File.Exists(SaveMaxFilePath)) //check if savemax file exists
+		{
+			System.IO.File.WriteAllText(SaveMaxFilePath, "0");
+		}
 	}
 
 
@@ -53,7 +66,7 @@ public class MainMenu : MonoBehaviour {
 
 		if (GUI.Button (new Rect (button_width_pos, button_height_pos, button_width, button_height), "Play")) {
 
-			StreamReader reader = new StreamReader(path);
+			StreamReader reader = new StreamReader(SaveFilePath);
 			string levelstring = reader.ReadLine();
 			int level = int.Parse (levelstring);
 			reader.Close ();
@@ -61,7 +74,7 @@ public class MainMenu : MonoBehaviour {
 			Debug.Log (level);
 			Debug.Log (num_scenes);
 
-			if (level + 1 > num_scenes || level < 3) {
+			if (level < 3) {
 				SceneManager.LoadScene ("Level1");
 			} else {
 
@@ -80,8 +93,7 @@ public class MainMenu : MonoBehaviour {
 		}
 
 		if (GUI.Button (new Rect (button_width_pos, button_height_pos + (button_height + button_gap)*3, button_width, button_height), "Quit")) {
-			//Application.Quit (); //uncomment when the app is compiled
-			EditorApplication.isPlaying = false; //exit play mode
+			Application.Quit (); //quit
 
 		}
 

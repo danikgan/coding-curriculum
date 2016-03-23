@@ -17,7 +17,7 @@ public class LevelSelector : MonoBehaviour {
 
 	void Awake(){
 
-		maxpath = Application.dataPath + "/SaveFiles/savemax.txt"; //path to savemax.txt file
+		maxpath = Application.persistentDataPath + "/savemax.txt"; //path to savemax.txt file
 
 	}
 
@@ -60,8 +60,6 @@ public class LevelSelector : MonoBehaviour {
 		GUIStyle button_style17 = locked_button_style;
 		GUIStyle button_style18 = locked_button_style;
 
-
-	
 	
 		StreamReader reader = new StreamReader(maxpath);
 		string maxlevelstring = reader.ReadLine();
