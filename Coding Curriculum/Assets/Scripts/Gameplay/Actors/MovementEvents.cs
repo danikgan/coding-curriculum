@@ -50,17 +50,18 @@ public class MovementEvents : MonoBehaviour
     static void LevelTransition()
     {
         Debug.Log("transition");
-        int index = SceneManager.GetActiveScene().buildIndex;
+        int index = SceneManager.GetActiveScene().buildIndex; //get current level index
 
-        Debug.Log(SceneManager.sceneCountInBuildSettings + " scenes ");
         Debug.Log(index);
 
-        if (SceneManager.sceneCountInBuildSettings > index + 1)
+		int total_num_scenes = SceneManager.sceneCountInBuildSettings;
+
+		if (total_num_scenes > index + 1) //if the current level is not last
         {
             Debug.Log("transition1");
             SceneManager.LoadScene(index + 1);
         }
-        else
+        else //if the current level is the last - revert to level1
         {
             Debug.Log("transition2");
             SceneManager.LoadScene("Level1");
