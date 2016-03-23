@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Text;
 using System.IO; 
 using UnityEngine.SceneManagement;
 
@@ -12,10 +10,9 @@ public class LevelSelector : MonoBehaviour {
 	private int menus_num = 3;
 
 
-	void Awake(){
-
+	void Awake()
+    {
 		maxpath = Application.dataPath + "/SaveFiles/savemax.txt";
-
 	}
 
 	void OnGUI() {

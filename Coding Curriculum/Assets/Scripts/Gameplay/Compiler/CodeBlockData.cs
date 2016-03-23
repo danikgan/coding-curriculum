@@ -11,6 +11,8 @@ public class CodeBlockData : MonoBehaviour
     public GameObject FirstBlockInCompoundStatement = null;
     public GameObject HeadOfCompoundStatement = null;
 
+    public GameObject CurrentCodeBlockPrefab = null;
+
     [NotNull] public string Type;           //Used to describe the type of the block: "Instruction" or "Parameter" or "Start"
     [NotNull] public string Meaning;        //Used to describe the meaning of the current CodeBlock. Use strings such as "go_forward" , "turn_left", 
                                             // "turn_right" , "while", "if", "else", "do_while", "CanGoForward", "StartMain"
@@ -22,8 +24,6 @@ public class CodeBlockData : MonoBehaviour
     void Start()
     {
         var boxCollider = GetComponent<BoxCollider2D>();
-     /*   var size = GetComponent<RectTransform>().rect.size;
-        boxCollider.size = size;*/
 
         if (Type != "Start")
             boxCollider.enabled = false;

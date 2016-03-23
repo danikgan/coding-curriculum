@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Text;
 using System.IO; 
 using UnityEngine.SceneManagement;
 using UnityEditor;
@@ -11,10 +9,9 @@ public class MainMenu : MonoBehaviour {
 	private string path;
 	private int num_scenes;
 
-	void Awake(){
-
-	path = Application.dataPath + "/SaveFiles/save.txt";
-
+	void Awake()
+    {
+	    path = Application.dataPath + "/SaveFiles/save.txt";
 	}
 
 

@@ -16,7 +16,7 @@ public class SceneReferences : MonoBehaviour
         get { return Map.transform != null ? Map.transform.lossyScale : new Vector3(1, 1, 1); }
     }
 
-    void Start()
+    void Awake()
     {
         Player = GameObject.Find("Player");
         OuterDragArea = GameObject.Find("Outer Drag Area");

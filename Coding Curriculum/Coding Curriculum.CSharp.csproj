@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -85,6 +79,7 @@
     <Compile Include="Assets\Scripts\Gameplay\Actors\MovementEvents.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\Sensors.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlockData.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlocksManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Compiler\DragAndDrop.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Compiler\RunCode.cs" />
     <Compile Include="Assets\Scripts\UI\UpdateBlocksPositions.cs" />

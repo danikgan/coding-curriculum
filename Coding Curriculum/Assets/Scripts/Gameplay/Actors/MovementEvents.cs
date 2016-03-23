@@ -8,7 +8,7 @@ public class MovementEvents : MonoBehaviour
     private static GameObject _player ;
     private SceneReferences _referencesScript;
 
-    void Start ()
+    void Awake()
     {
         var mainCamera = GameObject.Find("Main Camera");
         if (mainCamera)
