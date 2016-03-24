@@ -184,6 +184,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   background: {fileID: 2800000, guid: 6f041d3c8676a4767b6c33bfdf2f9ef6, type: 3}
+  tut1: {fileID: 2800000, guid: ce201d6a8419147f9a7c2e8a7d19c8db, type: 3}
+  tut2: {fileID: 2800000, guid: cffdf2e56eaca4965858de870c6783b1, type: 3}
+  tut3: {fileID: 2800000, guid: 119ebf5982a394e5ebd5714d8e069f97, type: 3}
+  tut4: {fileID: 2800000, guid: 43ac5e26945f14286bdfc0eeda614e04, type: 3}
+  tut5: {fileID: 2800000, guid: 9bd72e44d7aac439ea27d616d3ab7545, type: 3}
+  tut6: {fileID: 2800000, guid: 0aecd295b65234c0184d3c141b3ea785, type: 3}
+  tut7: {fileID: 2800000, guid: b1fa302bb47754a8f948c5827a885f6f, type: 3}
+  tut8: {fileID: 2800000, guid: 58d640c847cbb4141b9941b07f856184, type: 3}
   tutorial_skin: {fileID: 11400000, guid: d9bfb30a7bc484f7d8725fd4a681ce45, type: 2}
   menu_button_style:
     m_Name: 
