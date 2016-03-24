@@ -198,6 +198,7 @@ GameObject:
   - 224: {fileID: 22449758}
   - 222: {fileID: 22241134}
   - 114: {fileID: 11486064}
+  - 114: {fileID: 11492016}
   m_Layer: 5
   m_Name: Outer Drag Area
   m_TagString: Untagged
@@ -797,7 +798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9852941, g: 0.96291023, b: 0.17387542, a: 0.392}
+  m_Color: {r: 0.20626082, g: 0.8014706, b: 0.7522118, a: 0.392}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -827,15 +828,42 @@ MonoBehaviour:
   GoForwardBlockLimit: 3
   CanGoForwardBlockPrefab: {fileID: 197798, guid: 5b56f3fd6d9966741adda75b2c84ed66,
     type: 2}
-  CanGoForwardBlockLimit: 2
+  CanGoForwardBlockLimit: 0
   IfBlockPrefab: {fileID: 191044, guid: 797122b816c34654a9d5ee523150c808, type: 2}
-  IfBlockLimit: 2
+  IfBlockLimit: 0
   WhileBlockPrefab: {fileID: 135260, guid: 2141e6e1fed22a24eb8177f68d573762, type: 2}
   WhileBlockLimit: 0
   TurnLeftBlockPrefab: {fileID: 125664, guid: 14338d6234e8bfb4c910bc2adf33e3c8, type: 2}
   TurnLeftBlockLimit: 0
   TurnRightBlockPrefab: {fileID: 147356, guid: 1919c8212bbd35248a309b692f57c860, type: 2}
-  TurnRightBlockLimit: 4
+  TurnRightBlockLimit: 0
+--- !u!114 &11492016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 183180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0.53798175, b: 0.75735295, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
 --- !u!114 &11493052
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -874,7 +902,7 @@ MonoBehaviour:
   m_Script: {fileID: -1200242548, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 0
+  m_ShowMaskGraphic: 1
 --- !u!222 &22207104
 CanvasRenderer:
   m_ObjectHideFlags: 1

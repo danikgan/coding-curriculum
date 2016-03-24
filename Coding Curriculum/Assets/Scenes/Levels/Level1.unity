@@ -882,11 +882,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 22427904, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+    - target: {fileID: 22455324, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
       propertyPath: m_AnchorMax.x
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 22427904, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+    - target: {fileID: 22455324, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
@@ -898,25 +898,13 @@ Prefab:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 22455324, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+    - target: {fileID: 22427904, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
       propertyPath: m_AnchorMax.x
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 22455324, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+    - target: {fileID: 22427904, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
       propertyPath: m_AnchorMax.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11491942, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
-      propertyPath: CanGoForwardBlockLimit
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11491942, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
-      propertyPath: IfBlockLimit
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11491942, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
-      propertyPath: TurnRightBlockLimit
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}

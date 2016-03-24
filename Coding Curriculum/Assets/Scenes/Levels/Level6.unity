@@ -409,18 +409,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11444332, guid: c9e82787b66cff3468adac1cab126888, type: 2}
-      propertyPath: StartingPosition.x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 11444332, guid: c9e82787b66cff3468adac1cab126888, type: 2}
-      propertyPath: StartingPosition.y
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 11444332, guid: c9e82787b66cff3468adac1cab126888, type: 2}
-      propertyPath: StartingDirection
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c9e82787b66cff3468adac1cab126888, type: 2}
   m_IsPrefabParent: 0
