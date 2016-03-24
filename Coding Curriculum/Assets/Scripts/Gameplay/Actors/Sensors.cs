@@ -19,10 +19,6 @@ public class Sensors : MonoBehaviour
         var hitColliders = Physics2D.OverlapPointAll(endPosition);
        
         return hitColliders.Any(hitCollider => !hitCollider.isTrigger) ? new Structs.MultiTypes { Bool = false} : new Structs.MultiTypes { Bool = true};
-
-        /*  var colliderHit = Physics2D.Linecast(endPosition, startPosition, 1).collider;
-        var collision = colliderHit.name != "Player" && !colliderHit.isTrigger;
-        return new Structs.MultiTypes { Bool = !collision };*/
     }
 
 }

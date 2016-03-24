@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.3f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -85,8 +87,10 @@
     <Compile Include="Assets\Scripts\Gameplay\Actors\MovementEvents.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Actors\Sensors.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlockData.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlocksManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Compiler\DragAndDrop.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Compiler\RunCode.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Compiler\Compiler.cs" />
+    <Compile Include="Assets\Scripts\UI\RunStopSwitcher.cs" />
     <Compile Include="Assets\Scripts\UI\UpdateBlocksPositions.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\SortingLayerExposed.cs" />

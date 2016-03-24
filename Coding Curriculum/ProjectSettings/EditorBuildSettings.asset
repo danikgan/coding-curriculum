@@ -12,7 +12,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menu/tutorial.unity
   - enabled: 1
-    path: Assets/Scenes/Levels/Level1.unity
+    path: Assets/Scenes/Test Scenes/Base Scene.unity
   - enabled: 1
     path: Assets/Scenes/Levels/Level2.unity
   - enabled: 0

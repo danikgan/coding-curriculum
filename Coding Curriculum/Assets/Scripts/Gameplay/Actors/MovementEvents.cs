@@ -22,7 +22,7 @@ public class MovementEvents : MonoBehaviour
     public void CheckForReachedDestination()
     {
         var hitColliders = Physics2D.OverlapPointAll(_player.transform.position);
-        var isAtDestination = hitColliders.Any(hitCollider => hitCollider.gameObject.name.Equals("Finish"));
+        var isAtDestination = hitColliders.Any(hitCollider => hitCollider.gameObject.transform.parent.gameObject.name.Equals("Finish"));
 
 		if (isAtDestination) {
 
