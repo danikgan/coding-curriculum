@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Direction: 0
-  StartingPosition: {x: 6, y: 6}
+  StartingPosition: {x: 5, y: 6}
   StartingDirection: 3
 --- !u!114 &11457736
 MonoBehaviour:

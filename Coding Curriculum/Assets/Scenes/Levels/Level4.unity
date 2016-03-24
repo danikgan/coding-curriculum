@@ -918,6 +918,22 @@ Prefab:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11491942, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+      propertyPath: GoForwardBlockLimit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11491942, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+      propertyPath: WhileBlockLimit
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11491942, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+      propertyPath: TurnLeftBlockLimit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11491942, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
+      propertyPath: TurnRightBlockLimit
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
   m_IsPrefabParent: 0
