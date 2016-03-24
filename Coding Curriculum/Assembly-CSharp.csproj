@@ -61,8 +61,10 @@
      <Compile Include="Assets\Scripts\Gameplay\Actors\MovementEvents.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Actors\Sensors.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlockData.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlocksManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Compiler\Compiler.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Compiler\DragAndDrop.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Compiler\RunCode.cs" />
+     <Compile Include="Assets\Scripts\UI\RunStopSwitcher.cs" />
      <Compile Include="Assets\Scripts\UI\UpdateBlocksPositions.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\SortingLayerExposed.cs" />
@@ -70,7 +72,6 @@
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\TiledInitialShaderProperties.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\TiledMap.cs" />
      <None Include="Assets\Tiled2Unity\Imported\level3.tiled2unity.xml" />
-     <None Include="Assets\StreamingAssets\savemax.txt" />
      <None Include="Assets\Tiled2Unity\Imported\Map3.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
@@ -82,7 +83,6 @@
      <None Include="Assets\Tiled2Unity\Imported\level6.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Imported\level9.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Materials\_ReadMe.txt" />
-     <None Include="Assets\StreamingAssets\save.txt" />
      <None Include="Assets\Tiled2Unity\Textures\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Imported\level10.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Imported\level4.tiled2unity.xml" />

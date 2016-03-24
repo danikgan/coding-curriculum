@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85b76e4e94b964dbb8a8c81aadb5a160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeOutTexture: {fileID: 2800000, guid: 01bc83ddceb4f4b2ebf1f724d97265cf, type: 3}
+  fadeOutTexture: {fileID: 2800000, guid: 12074b394685c4b7ea1d204194b8fcb4, type: 3}
   fadeSpeed: 0.8
 --- !u!114 &46567400
 MonoBehaviour:
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 654dcab746e09427bb12ccd65e36d3a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeInTexture: {fileID: 2800000, guid: 83e2c53437b4446ba97a600e9bc1d3ee, type: 3}
+  fadeInTexture: {fileID: 2800000, guid: 54ec90d0da738415c8d2368e5ccd3e7c, type: 3}
   fadeSpeed: 0.8
 --- !u!1 &95458225
 GameObject:

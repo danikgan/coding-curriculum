@@ -57,7 +57,6 @@
      <Compile Include="Assets\Tiled2Unity\Scripts\Editor\Tiled2UnityMenuItems.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Editor\TiledAssetPostProcessor.cs" />
      <None Include="Assets\Tiled2Unity\Imported\level3.tiled2unity.xml" />
-     <None Include="Assets\StreamingAssets\savemax.txt" />
      <None Include="Assets\Tiled2Unity\Imported\Map3.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
@@ -69,7 +68,6 @@
      <None Include="Assets\Tiled2Unity\Imported\level6.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Imported\level9.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Materials\_ReadMe.txt" />
-     <None Include="Assets\StreamingAssets\save.txt" />
      <None Include="Assets\Tiled2Unity\Textures\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Imported\level10.tiled2unity.xml" />
      <None Include="Assets\Tiled2Unity\Imported\level4.tiled2unity.xml" />
