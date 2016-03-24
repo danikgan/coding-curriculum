@@ -5,7 +5,7 @@ public class Sensors : MonoBehaviour
 {
 	CharacterMovement _movement;
 
-	void Awake()
+	void Start ()
     {
 		_movement = gameObject.GetComponent<CharacterMovement>();
 	}
