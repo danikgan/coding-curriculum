@@ -189,7 +189,8 @@ MonoBehaviour:
   DropArea: {fileID: 668385567}
   OuterDragArea: {fileID: 940081901}
   OuterDropArea: {fileID: 1357109909}
-  StartProgramCodeBlock: {fileID: 1791010318}
+  StartProgramCodeBlock: {fileID: 130258, guid: fef4515a2fa027e49a67639bae56ab6e,
+    type: 2}
   Player: {fileID: 488849657}
   RunStopButton: {fileID: 657591201}
   Map: {fileID: 0}
@@ -730,10 +731,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1791010318 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 190990, guid: 9cfcce4e4bc3e414db4b8d1738af4256, type: 2}
-  m_PrefabInternal: {fileID: 2025779967}
 --- !u!1 &1955503453
 GameObject:
   m_ObjectHideFlags: 0
