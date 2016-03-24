@@ -33,8 +33,8 @@ public class UpdateBlocksPositions : MonoBehaviour
         var _startProgramCodeBlock = _referencesScript.StartProgramCodeBlock;
         BlocksSize = _startProgramCodeBlock.GetComponent<RectTransform>().sizeDelta;
 
-        Indentation = (BlocksSize.x/7);
-        SpaceBetweenBlocks = BlocksSize.y + 10;
+		Indentation = (float) (BlocksSize.x/2.5);
+        SpaceBetweenBlocks = BlocksSize.y + 26;
     }
 
     void Start()
