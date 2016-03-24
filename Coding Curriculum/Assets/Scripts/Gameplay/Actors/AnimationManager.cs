@@ -4,7 +4,7 @@ public class AnimationManager : MonoBehaviour
 {
     private Animator _animation;         //access to animation controller 		
 
-	void Awake()
+	void Start ()
 	{
         _animation = GetComponent<Animator>();
 	}

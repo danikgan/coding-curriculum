@@ -4,30 +4,26 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public const double StandardTileSize = 32;
-
     public double Size         // Size of a tile
     {
-        get { return _sceneReferences.MapScale.x * StandardTileSize; }
+        get { return _sceneReferences.MapScale.x * 32.0; }
     }
 
     private double Speed        // Movement speed
     {
-        get { return Size * 2; }
+        get { return Size*2; }
     }
 
-    public Enumerations.Directions Direction;     //direction of Player's movement - used for initialisation
-
-    public Vector2 StartingPosition; // used for initialisation
-    
+    public Enumerations.Directions Direction;     //direction of Player's movement
     private AnimationManager _animationManager;
     private RunCode _runCode;
     private SceneReferences _sceneReferences;
     private Sensors _sensors;
     private MovementEvents _movementEvents;
 
-    void Awake()
+    void Start()
     {
+        Direction = Enumerations.Directions.Down;
         _animationManager = GetComponent<AnimationManager>();
         _sceneReferences = GameObject.Find("Main Camera").GetComponent<SceneReferences>();
         _runCode = _sceneReferences.RunButton.GetComponent<RunCode>();
@@ -41,18 +37,6 @@ public class CharacterMovement : MonoBehaviour
             {Enumerations.Directions.Right, new Structs.XYpair(1, 0)},
             {Enumerations.Directions.Down, new Structs.XYpair(0, -1)}
         };
-    }
-
-    void Start()
-    {
-        ChangeDirection(Direction);
-        SetImmediatePosition(StartingPosition);
-    }
-
-    private void SetImmediatePosition(Vector2 newPosition)
-    {
-        var endPosition = new Vector2((float)((newPosition.x - 0.5) * StandardTileSize), - (float)((newPosition.y - 0.5) * StandardTileSize));
-        transform.localPosition = endPosition;
     }
 
     public Structs.MultiTypes go_forward(Structs.MultiTypes parameter)
@@ -89,12 +73,7 @@ public class CharacterMovement : MonoBehaviour
         var newDirectionInt = (currentDirectionInt + newDirection) % 4;
         if (newDirectionInt < 0)
             newDirectionInt = 3;
-        ChangeDirection((Enumerations.Directions)newDirectionInt);
-    }
-
-    private void ChangeDirection(Enumerations.Directions newDirection)
-    {
-        Direction = newDirection;
+        Direction = (Enumerations.Directions) newDirectionInt;
         _animationManager.SetAnimation(Direction, false);
     }
 
