@@ -325,17 +325,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 184826, guid: bf39f6ab302f7457691c9fc3c9cb9f52, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6060262, guid: bf39f6ab302f7457691c9fc3c9cb9f52, type: 2}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 100582, guid: bf39f6ab302f7457691c9fc3c9cb9f52, type: 2}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 114612, guid: bf39f6ab302f7457691c9fc3c9cb9f52, type: 2}
+      propertyPath: m_Name
+      value: Map
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf39f6ab302f7457691c9fc3c9cb9f52, type: 2}
