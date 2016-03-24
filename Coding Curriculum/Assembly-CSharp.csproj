@@ -64,6 +64,7 @@
      <Compile Include="Assets\Scripts\Gameplay\Compiler\CodeBlocksManager.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Compiler\Compiler.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Compiler\DragAndDrop.cs" />
+     <Compile Include="Assets\Scripts\UI\MenuButton.cs" />
      <Compile Include="Assets\Scripts\UI\RunStopSwitcher.cs" />
      <Compile Include="Assets\Scripts\UI\UpdateBlocksPositions.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
