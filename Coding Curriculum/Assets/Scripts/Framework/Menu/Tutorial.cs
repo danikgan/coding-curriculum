@@ -20,7 +20,7 @@ public class Tutorial : MonoBehaviour {
 
 	private Vector2 scrollPositionButtons = Vector2.zero; //vector for scroll buttons scroll area
 	private Vector2 scrollPositionText = Vector2.zero; //vector for scroll text  scroll area
-	private int tutorial_to_display = 1; //which tutorial will be displayed by default
+	public static int tutorial_to_display = 1; //which tutorial will be displayed by default
 	private int num_buttons = 8; //number of buttons in scrollable area
 	private int tutorial_text_size;
 
