@@ -8,7 +8,7 @@ public class MovementEvents : MonoBehaviour
     private static GameObject _player ;
     private SceneReferences _referencesScript;
 
-    void Start ()
+    void Awake()
     {
         var mainCamera = GameObject.Find("Main Camera");
         if (mainCamera)
@@ -50,18 +50,17 @@ public class MovementEvents : MonoBehaviour
     static void LevelTransition()
     {
         Debug.Log("transition");
-        int index = SceneManager.GetActiveScene().buildIndex; //get current level index
+        int index = SceneManager.GetActiveScene().buildIndex;
 
+        Debug.Log(SceneManager.sceneCountInBuildSettings + " scenes ");
         Debug.Log(index);
 
-		int total_num_scenes = SceneManager.sceneCountInBuildSettings;
-
-		if (total_num_scenes > index + 1) //if the current level is not last
+        if (SceneManager.sceneCountInBuildSettings > index + 1)
         {
             Debug.Log("transition1");
             SceneManager.LoadScene(index + 1);
         }
-        else //if the current level is the last - revert to level1
+        else
         {
             Debug.Log("transition2");
             SceneManager.LoadScene("Level1");
