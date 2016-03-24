@@ -11,7 +11,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private CodeBlockData _thisCodeBlockDataData;
     private UpdateBlocksPositions _updateBlocksPositionsScript;
 
-    void Awake()
+    void Start()
     {
         _thisCodeBlockDataData = GetComponent<CodeBlockData>();
         if(!_thisCodeBlockDataData)
@@ -36,7 +36,14 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         if (transform.parent == dragArea.transform)
         {
-            CodeBlocksManager.CreateNewBlock(transform.gameObject);
+            var newTransform = Instantiate(transform, transform.localPosition, Quaternion.identity) as Transform;
+            if (newTransform != null)
+            {
+                newTransform.SetParent(transform.parent, false);
+
+            }
+            else
+                Debug.LogError("New CodeBlock could not be created");
         }
         else
         {
@@ -54,7 +61,6 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         //Now we have to check if our CodeBlock has collided with any other code block
         //If it has, than we temporarily and unilaterally connect it to the other code blocks
-        _updateBlocksPositionsScript.UpdatePositionsTemporarily(gameObject);
         CheckCollisionsWithCodeBlocks();
         //TODO: Show some visual feedback if there is an error with the colliders. e.g. the CodeBlock becomes
         //TODO: red if the colliders are not valid and green if it's ok. If no colliders are found, nothing happens.
@@ -92,18 +98,18 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         //We also connect the CodeBlock with the other code blocks around it and we update the position of all the code blocks
         AttachPermanently();
-        _updateBlocksPositionsScript.UpdateArea(_referencesScript.StartProgramCodeBlock);
+        _updateBlocksPositionsScript.UpdatePositions(_referencesScript.StartProgramCodeBlock);
     }
 
     private void ExtractCurrentBlock()
     {
         var currentCodeBlockData = GetComponent<CodeBlockData>();
 
-     /*   if (currentCodeBlockData.ParameterBlock)        //TODO: Improve this. Not at it should be
+        if (currentCodeBlockData.ParameterBlock)        //TODO: Improve this. Not at it should be
         {
             Destroy(currentCodeBlockData.ParameterBlock);   
             currentCodeBlockData.ParameterBlock = null;
-        }*/
+        }
 
         if (currentCodeBlockData.Type.Equals("Parameter"))
         {
@@ -139,7 +145,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         var currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
 
         currentCodeBlockData.HeadOfCompoundStatement =
-            currentCodeBlockData.NextBlock = currentCodeBlockData.PreviousBlock = null;
+    currentCodeBlockData.NextBlock = currentCodeBlockData.PreviousBlock = null;
 
         var gameObjectsToBeDestroyed = new Stack<GameObject>();
 
@@ -152,7 +158,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
                 //We check if this block has attached a parameter block. If it does, then we move it as well (same Y)
                 currentCodeBlockData = currentCodeBlock.GetComponent<CodeBlockData>();
                 if (currentCodeBlockData.ParameterBlock)
-                    gameObjectsToBeDestroyed.Push(currentCodeBlockData.ParameterBlock);
+                    Destroy(currentCodeBlockData.ParameterBlock);
 
                 //If the current block is the head of a compound statement, then we move to it
                 if (currentCodeBlockData.FirstBlockInCompoundStatement)
@@ -200,11 +206,11 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             var codeBlock = gameObjectsToBeDestroyed.Pop();
             if (codeBlock != null)
             {
-                CodeBlocksManager.RemoveBlock(codeBlock);
+                Destroy(codeBlock);
             }
         }
 
-        _updateBlocksPositionsScript.UpdateArea(_referencesScript.StartProgramCodeBlock);
+        _updateBlocksPositionsScript.UpdatePositions(_referencesScript.StartProgramCodeBlock);
     }
 
     #endregion
@@ -212,7 +218,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private string CheckCollisionsWithCodeBlocks()
     {
         //The object has moved. Reset all parameters.
-        _thisCodeBlockDataData.NextBlock = _thisCodeBlockDataData.PreviousBlock = _thisCodeBlockDataData.HeadOfCompoundStatement = null;
+        _thisCodeBlockDataData.NextBlock = _thisCodeBlockDataData.PreviousBlock = _thisCodeBlockDataData.ParameterBlock = _thisCodeBlockDataData.HeadOfCompoundStatement = null;
 
         //Next we'll get a list of all the colliders that are in the rectangular area determined by the code blocks we are dragging right now
         var rectTransform = transform.GetComponent<RectTransform>();

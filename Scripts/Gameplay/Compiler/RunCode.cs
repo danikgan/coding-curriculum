@@ -10,7 +10,7 @@ public class RunCode : MonoBehaviour
     private GameObject PausedExecution_CodeBlock = null;
     public bool PausedExecution_ReadyToRestart = false;
 
-    void Awake()
+    void Start()
     {
         var mainCamera = GameObject.Find("Main Camera");
         if (mainCamera)

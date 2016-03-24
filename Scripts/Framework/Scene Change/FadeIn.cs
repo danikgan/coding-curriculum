@@ -12,26 +12,30 @@ public class FadeIn : MonoBehaviour {
 	private float alpha = 1.0f;			// the texture's alpha value between 0 and 1
 	private int fadeDir = -1; // the direction to fade: in = -1 or out = 1
 	private int firstentry = 1;
-    private const string _saveFilePath = "/SaveFiles/save.txt";
-    private const string _saveMaxFilePath = "/SaveFiles/savemax.txt";
 
-    private static string SaveFilePath
-    {
-        get { return Application.dataPath + _saveFilePath; }
-    }
-
-    private static string SaveMaxFilePath
-    {
-        get { return Application.dataPath + _saveMaxFilePath; }
-    }
+	private string SaveFilePath;
+	private string SaveMaxFilePath;
 
     void Awake()
     {
-        var maxlevel = int.Parse(File.ReadAllText(SaveFilePath));
-	    File.WriteAllText(SaveFilePath, SceneManager.GetActiveScene().buildIndex.ToString());
+		SaveFilePath = Application.persistentDataPath + "/save.txt"; //strings to specify paths to save files
+		SaveMaxFilePath = Application.persistentDataPath + "/savemax.txt";
 
-		if(SceneManager.GetActiveScene ().buildIndex > maxlevel) //if current level index if higher then the one in savemax.txt
-            File.WriteAllText(SaveMaxFilePath, SceneManager.GetActiveScene().buildIndex.ToString());
+
+		int current_level = SceneManager.GetActiveScene ().buildIndex; //get current level
+		System.IO.File.WriteAllText(SaveFilePath, current_level.ToString()); //write it to save file
+
+
+		StreamReader reader = new StreamReader(SaveMaxFilePath); //get maximum level
+		string levelstring = reader.ReadLine();
+		int maxlevel = int.Parse (levelstring);
+		reader.Close ();
+
+		if(current_level > maxlevel) //if current level index if higher then the one in savemax.txt
+			System.IO.File.WriteAllText(SaveMaxFilePath, current_level.ToString()); //write maxlevel to savemax file
+
+		Debug.Log (current_level + " current, " + maxlevel + " maximum");
+
 
     }
 
