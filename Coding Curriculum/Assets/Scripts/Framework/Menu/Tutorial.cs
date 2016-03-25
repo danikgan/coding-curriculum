@@ -11,7 +11,7 @@ public class Tutorial : MonoBehaviour {
 	private Vector2 scrollPositionButtons = Vector2.zero; //vector for scroll buttons scroll area
 	private Vector2 scrollPositionText = Vector2.zero; //vector for scroll text  scroll area
 	public static int tutorial_to_display = 1; //which tutorial will be displayed by default
-	private int num_buttons = 10; //number of buttons in scrollable area
+	private int num_buttons = 11; //number of buttons in scrollable area
 	private int tutorial_text_size;
 
 	void OnGUI () {
@@ -97,6 +97,10 @@ public class Tutorial : MonoBehaviour {
 			tutorial_to_display = 10; 
 		}
 
+		if (GUI.Button (new Rect (button_width_pos, button_height_pos + (button_height + button_gap)*10, button_width, button_height), "Answers")) {
+			tutorial_to_display = 11; 
+		}
+
 		GUI.EndScrollView();
 
 		float text_scroll_box_height = Screen.width * 0.7f;
@@ -132,6 +136,9 @@ public class Tutorial : MonoBehaviour {
 			break;
 		case 10:
 			text_scroll_box_height = Screen.width * 0.65f;
+			break;
+		case 11:
+			text_scroll_box_height = Screen.width * 2f;
 			break;
 		}
 
@@ -182,6 +189,10 @@ public class Tutorial : MonoBehaviour {
 
 		if (tutorial_to_display == 10) {
 			GUI.Label (new Rect (0, 0, text_scroll_hor_size - 20, Screen.width *0.65f), "Ok, now this is serious stuff!\nYou might have noticed that you now have -a lot- of instructions available, and you have a lot of choices of path for the robot to take.. Yeah ! Up until now, all the levels had one solution only (on some cases you could do two very similar solutions though :p).\nNow this level is special: you can solve it in many, many, different ways. There’s no “bad” solution. So now, you can actually experiment with all instructions as much as you want to see what happens!\nHere’s a challenge for the most curious ones: Once you find one solution that works, try to tackle the puzzle in a different way, and try to see if you can come up with a different idea. Then just have a look at both solutions: which one is faster? simpler? longer? You can also compare your solution to your friend’s ideas. \n\n\nDid you know?\nIn the real world, that is how things actually work! There is no “single” solution to a problem. In fact, if you put, say 100 developers in a test, asking them to solve whatever problem you come up with, you’ll see 100 different solutions !! But the most amazing part of this is that it is possible to have a 100 different solutions to a problem that all work !! That is what programming is also about: you can always come up with a different solution than your friend, and you see how free you are to experiment with robots/apps/websites/games…\n\nOne last thing too: You may have noticed that some solutions are better, shorter and/or simpler than others. We say that some solutions are more efficient than others. In their job, developers always try to be more “efficient”: they always try to have a super cool solution to their super cool problems!");
+		}
+
+		if (tutorial_to_display == 11) {
+			GUI.Label (new Rect (0, 0, text_scroll_hor_size - 20, Screen.width *2f)," 1.moveForward;\nmoveForward;\nmoveForward;\n\n\n1B. \nwhile (canMove) \n{ \nmoveForward;\n }\n\n\n2. \n while (canMove)\n{ \nmoveForward; \n}\nturnRight;\nwhile (canMove)\n{ \nmoveForward; \n}\n\n\n3. \nwhile (notReached_target) { \nwhile (canMove) {\nmoveForward;\n} \nturnLeft;\n}\n\n\n4.\nwhile (notReached_target) { \nwhile (canMove) {\nmoveForward;\n} \nturnLeft;\n}\n\n\n5.\nwhile (notReached_target) { \nmoveForward;\n}\n\n\n6.\nwhile (notReached_target) { \nwhile (canMove) {\nmoveForward;\n} \nturnLeft;\n}\n\n\n7.\nwhile (notReached_target) { \nif (not_canMove) {\nturnLeft;\n}\nmoveForward;\n}\n\n\n8.\nwhile (canMove) \n{ \nmoveForward; \n}\nturnLeft;\nmoveForward;\nturnLeft;\nmoveForward;\nturnLeft;\nwhile (canMove) \n{ \nmoveForward; \n}\n\n9.\nwhile (notReached_target) {\nmoveForward;\nif (noObstacles_around) {\nturnLeft;\n} else {\nturnRight;\nturnRight;\n}\n}\n\n10.\nwhile (notReached_target) { \nwhile (canMove) {\nmoveForward;\n} \nturnLeft;\n}\n");
 		}
 
 		GUI.EndScrollView();

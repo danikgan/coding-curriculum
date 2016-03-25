@@ -10,6 +10,7 @@ public class Popups : MonoBehaviour {
 	private bool showpopup;
 	private Vector2 FirstPopup = Vector2.zero;
 
+
 	void Start () {
 
 		showpopup = true;
@@ -61,10 +62,10 @@ public class Popups : MonoBehaviour {
 			content_height = Screen.width * 0.04f;
 				break;
 			case 10:
-			content_height = Screen.width * 0.45f;
+			content_height = Screen.width * 0.23f;
 				break;
 			case 11:
-			content_height = Screen.width * 0.45f;
+			content_height = Screen.width * 0.07f;
 				break;
 
 		}

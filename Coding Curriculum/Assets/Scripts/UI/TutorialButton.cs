@@ -80,6 +80,12 @@ public class TutorialButton : MonoBehaviour{
 			case 8:
 				content_height = Screen.width * 0.07f;
 				break;
+			case 9:
+				content_height = Screen.width * 0.05f;
+				break;
+			case 10:
+				content_height = Screen.width * 0.05f;
+				break;
 
 			}
 
