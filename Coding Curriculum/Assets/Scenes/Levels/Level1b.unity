@@ -101,6 +101,7 @@ GameObject:
   - 114: {fileID: 46567400}
   - 114: {fileID: 46567399}
   - 114: {fileID: 46567401}
+  - 114: {fileID: 46567402}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -232,6 +233,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e70c7951488e43ebb2da28ad83aade7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &46567402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 46567392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78cff78fba30b45128aa3b188aa3f70e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  background_popup: {fileID: 0}
+  content_popup: {fileID: 0}
 --- !u!1 &95458225
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,7 +886,7 @@ Prefab:
     - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
       propertyPath: content_popup
       value: 
-      objectReference: {fileID: 2800000, guid: e20dded1559434c1ab8e2110a59497e7, type: 3}
+      objectReference: {fileID: 2800000, guid: f62dbc304a4654176afa93aac0374f55, type: 3}
     - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
       propertyPath: button_style.m_Normal.m_Background
       value: 

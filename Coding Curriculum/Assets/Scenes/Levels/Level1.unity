@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   background_popup: {fileID: 2800000, guid: 0b07c6481e92f465fbac5f23e11e61a5, type: 3}
-  content_popup: {fileID: 2800000, guid: e20dded1559434c1ab8e2110a59497e7, type: 3}
+  content_popup: {fileID: 2800000, guid: 88c42b032cffe4237b40fe07b4ac9c27, type: 3}
 --- !u!1 &95458225
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,7 +428,7 @@ Prefab:
     - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
       propertyPath: content_popup
       value: 
-      objectReference: {fileID: 2800000, guid: e20dded1559434c1ab8e2110a59497e7, type: 3}
+      objectReference: {fileID: 2800000, guid: a3a581a35f8ab4c899236a55e617e0a3, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
   m_IsPrefabParent: 0

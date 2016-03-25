@@ -380,7 +380,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22488474, guid: 6ea01e2770908b14c9a577da015f7f33, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 74
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22438636, guid: 6ea01e2770908b14c9a577da015f7f33, type: 2}
       propertyPath: m_AnchorMax.x
@@ -631,6 +631,43 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Normal.m_Background
+      value: 
+      objectReference: {fileID: 2800000, guid: e1dd32db78d8a45ec9910d1ec767807d, type: 3}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Hover.m_Background
+      value: 
+      objectReference: {fileID: 2800000, guid: 471667b964f904192814406bce368a1c, type: 3}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Active.m_Background
+      value: 
+      objectReference: {fileID: 2800000, guid: 471667b964f904192814406bce368a1c, type: 3}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Active.m_TextColor.r
+      value: 0.7607844
+      objectReference: {fileID: 0}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Active.m_TextColor.g
+      value: 0.7607844
+      objectReference: {fileID: 0}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Active.m_TextColor.b
+      value: 0.7607844
+      objectReference: {fileID: 0}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: b530028e99dac4d508da2d6efe0efffe,
+        type: 3}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: button_style.m_Alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: content_popup
+      value: 
+      objectReference: {fileID: 2800000, guid: e1903e42fd058421b82ba09a9b0d824d, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
   m_IsPrefabParent: 0
