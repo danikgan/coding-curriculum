@@ -57,7 +57,7 @@ public class TutorialButton : MonoBehaviour{
 			switch (index) {
 
 			case 1:
-				content_height = Screen.height*0.25f;
+				content_height = Screen.height*0.3f;
 				break;
 				case 2:
 				content_height = Screen.width * 0.1f;
@@ -69,7 +69,7 @@ public class TutorialButton : MonoBehaviour{
 				content_height = Screen.width * 0.1f;
 				break;
 			case 5:
-				content_height = Screen.width * 0.1f;
+				content_height = Screen.width * 0.07f;
 				break;
 			case 6:
 				content_height = Screen.width * 0.1f;
@@ -78,7 +78,7 @@ public class TutorialButton : MonoBehaviour{
 				content_height = Screen.width * 0.05f;
 				break;
 			case 8:
-				content_height = Screen.width * 0.1f;
+				content_height = Screen.width * 0.07f;
 				break;
 
 			}

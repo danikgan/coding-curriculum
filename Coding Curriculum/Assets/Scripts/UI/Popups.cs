@@ -34,29 +34,38 @@ public class Popups : MonoBehaviour {
 		switch (index) {
 
 		case 1:
-			content_height = Screen.height*1.6f;
+			content_height = Screen.height*1.8f;
 			break;
-			/*case 2:
-				text_scroll_box_height = Screen.width * 0.5f;
+			case 2:
+			content_height = Screen.width * 0.8f;
 				break;
 			case 3:
-				text_scroll_box_height = Screen.width * 0.49f;
+			content_height = Screen.width * 0.7f;
 				break;
 			case 4:
-				text_scroll_box_height = Screen.width * 0.49f;
+			content_height = Screen.width * 0.05f;
 				break;
 			case 5:
-				text_scroll_box_height = Screen.width * 0.49f;
+			content_height = Screen.width * 0.03f;
 				break;
 			case 6:
-				text_scroll_box_height = Screen.width * 0.56f;
+			content_height = Screen.width * 0.06f;
 				break;
 			case 7:
-				text_scroll_box_height = Screen.width * 0.72f;
+			content_height = Screen.width * 0.06f;
 				break;
 			case 8:
-				text_scroll_box_height = Screen.width * 0.45f;
-				break;*/
+			content_height = Screen.width * 0.33f;
+				break;
+			case 9:
+			content_height = Screen.width * 0.04f;
+				break;
+			case 10:
+			content_height = Screen.width * 0.45f;
+				break;
+			case 11:
+			content_height = Screen.width * 0.45f;
+				break;
 
 		}
 

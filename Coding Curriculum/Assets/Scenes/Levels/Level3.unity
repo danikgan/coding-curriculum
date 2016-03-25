@@ -331,8 +331,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78cff78fba30b45128aa3b188aa3f70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  background_popup: {fileID: 0}
-  content_popup: {fileID: 0}
+  background_popup: {fileID: 2800000, guid: 0b07c6481e92f465fbac5f23e11e61a5, type: 3}
+  content_popup: {fileID: 2800000, guid: 99e967c2d469c48bbb6111c6985fdb0e, type: 3}
 --- !u!1 &95458225
 GameObject:
   m_ObjectHideFlags: 0
