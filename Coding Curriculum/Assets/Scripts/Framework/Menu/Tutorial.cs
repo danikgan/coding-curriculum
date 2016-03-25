@@ -11,7 +11,7 @@ public class Tutorial : MonoBehaviour {
 	private Vector2 scrollPositionButtons = Vector2.zero; //vector for scroll buttons scroll area
 	private Vector2 scrollPositionText = Vector2.zero; //vector for scroll text  scroll area
 	public static int tutorial_to_display = 1; //which tutorial will be displayed by default
-	private int num_buttons = 8; //number of buttons in scrollable area
+	private int num_buttons = 10; //number of buttons in scrollable area
 	private int tutorial_text_size;
 
 	void OnGUI () {
@@ -89,6 +89,14 @@ public class Tutorial : MonoBehaviour {
 			tutorial_to_display = 8; 
 		}
 
+		if (GUI.Button (new Rect (button_width_pos, button_height_pos + (button_height + button_gap)*8, button_width, button_height), "Tutorial 9")) {
+			tutorial_to_display = 9; 
+		} 
+
+		if (GUI.Button (new Rect (button_width_pos, button_height_pos + (button_height + button_gap)*9, button_width, button_height), "Tutorial 10")) {
+			tutorial_to_display = 10; 
+		}
+
 		GUI.EndScrollView();
 
 		float text_scroll_box_height = Screen.width * 0.7f;
@@ -119,7 +127,12 @@ public class Tutorial : MonoBehaviour {
 		case 8:
 			text_scroll_box_height = Screen.width * 0.45f;
 			break;
-
+		case 9:
+			text_scroll_box_height = Screen.width * 0.9f;
+			break;
+		case 10:
+			text_scroll_box_height = Screen.width * 0.65f;
+			break;
 		}
 
 
@@ -161,6 +174,14 @@ public class Tutorial : MonoBehaviour {
 
 		if (tutorial_to_display == 8) {
 			GUI.Label (new Rect (0, 0, text_scroll_hor_size - 20, Screen.width*0.45f), "Hey, you went really, really far! We didn't expect you to do it so fast! You should be extremely clever! \n\nNow, as this game is too easy for you, we are going to make things a little bit more complicated: some blocks are not available anymore, and you have to solve this puzzle only with what is given to you!\n\nDid you know?\n\nSometimes, programmes are in the same situation as you are: some code elements, for whatever reason, becomes unavailable, and they have to solve their \"puzzles\" with a smaller toolkit! A common example is when a computer, which is being programmed, does not have enough memory to support complicated functions. So, if you solve this puzzle with what you have, you can proudly say, that you have faced the same challenges as real programmers do!");	
+		}
+
+		if (tutorial_to_display == 9) {
+			GUI.Label (new Rect (0, 0, text_scroll_hor_size - 20, Screen.width * 0.9f), "Hey, hey, hey you went that far !! \nDo you remember the “if” statement ?\nA little refresh:\nSay you have to do some homework (boring, right ??)\nYou would write something like:\nif I didn’t finish my homework\n  Do some stuff :p\nNow, say you did do your homework. How do you express that ?\nOk, so you’re used to this, but I’m gonna introduce a new instruction: the “else\" statement.\nYou just write it after the “if” statement:\nif I didn’t finish my homework\n  Do some stuff :p\nelse\n  Go play !!\nCool, isn’t it ?\nNow you can solve this problem with that super new instruction !\n\n\nDid you know ?\nOk, so now, you’re gonna learn a pretty cool word you can boast with: Algorithm.\n“Oooh that sounds like a scary word”. Yes, I agree, it does. But bear with me, it’s actually super cool, and you actually use algorithms everyday in your life without knowing it !\nSay I want you to cook some pastas.\nTypically, what you’re gonna do is:\nChoose your pasta\nBoil some water\nAdd pasta to the boiling water\nFilter the water\nEnjoy!!\n\nNow you might wonder, “why are there pastas here? What does this have to do with “Algorithm” ?? \"\nWell, what I just described is actually: a series of steps, that you take in a certain order, to have something you want at the end (here the result is some pastas :p).\nHold and behold, this is actually the definition of an algorithm! It’s as simple as that !!\nNow you might think “But then, everything I did in this game was designing algorithms to solve a puzzle”. You’re absolutely correct. That’s exactly it !!\nAnd that’s what developers do: they design algorithms so that you can watch youtube videos, play some games, or browse the Internet !\n");
+		}
+
+		if (tutorial_to_display == 10) {
+			GUI.Label (new Rect (0, 0, text_scroll_hor_size - 20, Screen.width *0.65f), "Ok, now this is serious stuff!\nYou might have noticed that you now have -a lot- of instructions available, and you have a lot of choices of path for the robot to take.. Yeah ! Up until now, all the levels had one solution only (on some cases you could do two very similar solutions though :p).\nNow this level is special: you can solve it in many, many, different ways. There’s no “bad” solution. So now, you can actually experiment with all instructions as much as you want to see what happens!\nHere’s a challenge for the most curious ones: Once you find one solution that works, try to tackle the puzzle in a different way, and try to see if you can come up with a different idea. Then just have a look at both solutions: which one is faster? simpler? longer? You can also compare your solution to your friend’s ideas. \n\n\nDid you know?\nIn the real world, that is how things actually work! There is no “single” solution to a problem. In fact, if you put, say 100 developers in a test, asking them to solve whatever problem you come up with, you’ll see 100 different solutions !! But the most amazing part of this is that it is possible to have a 100 different solutions to a problem that all work !! That is what programming is also about: you can always come up with a different solution than your friend, and you see how free you are to experiment with robots/apps/websites/games…\n\nOne last thing too: You may have noticed that some solutions are better, shorter and/or simpler than others. We say that some solutions are more efficient than others. In their job, developers always try to be more “efficient”: they always try to have a super cool solution to their super cool problems!");
 		}
 
 		GUI.EndScrollView();
