@@ -33,7 +33,6 @@ public class TutorialButton : MonoBehaviour{
 
 			//set up buttons position and size
 			float button_width_pos = Screen.width * 0.12f;
-			float button_height_pos = 0;
 			float button_width = Screen.width * 0.22f;
 			float button_height = Screen.height * 0.14f;
 			float button_text_size = Screen.height * 0.04f;
@@ -44,13 +43,46 @@ public class TutorialButton : MonoBehaviour{
 
 			button_style.fontSize = (int) button_text_size; //set up text size for button
 
-
 			var index = SceneManager.GetActiveScene().buildIndex; //get current level index
         	index = index - 2; //translate into understandable form
         
-       		if (index > 1) //1b level
-            index--;
-	        Tutorial.tutorial_to_display = index;
+			if (index > 1) { //1b level
+				index--;
+			}
+
+			Tutorial.tutorial_to_display = index;
+
+			Debug.Log (index);
+
+			switch (index) {
+
+			case 1:
+				content_height = Screen.height*0.25f;
+				break;
+				case 2:
+				content_height = Screen.width * 0.1f;
+				break;
+			case 3:
+				content_height = Screen.width * 0.1f;
+				break;
+			case 4:
+				content_height = Screen.width * 0.001f;
+				break;
+			case 5:
+				content_height = Screen.width * 0.1f;
+				break;
+			case 6:
+				content_height = Screen.width * 0.1f;
+				break;
+			case 7:
+				content_height = Screen.width * 0.05f;
+				break;
+			case 8:
+				content_height = Screen.width * 0.1f;
+				break;
+
+			}
+
 
 
 			GUI.DrawTexture (new Rect (Screen.width * 0.2f, Screen.height * 0.2f, Screen.width * 0.6f, Screen.height * 0.6f), background_popup); //draw background of popup message
