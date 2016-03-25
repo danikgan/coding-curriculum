@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\Gameplay\Compiler\DragAndDrop.cs" />
     <Compile Include="Assets\Scripts\UI\ConsolePrinter.cs" />
     <Compile Include="Assets\Scripts\UI\MenuButton.cs" />
+    <Compile Include="Assets\Scripts\UI\Popups.cs" />
     <Compile Include="Assets\Scripts\UI\RunStopSwitcher.cs" />
     <Compile Include="Assets\Scripts\UI\TutorialButton.cs" />
     <Compile Include="Assets\Scripts\UI\UpdateBlocksPositions.cs" />

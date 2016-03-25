@@ -31,7 +31,7 @@ public class Sensors : MonoBehaviour
     {
         var hitColliders = Physics2D.OverlapPointAll(transform.position);
         var isAtDestination = hitColliders.Any(hitCollider => hitCollider.gameObject.transform.parent.gameObject.name.Equals("Finish"));
-        return new Structs.MultiTypes {Bool = isAtDestination};
+        return new Structs.MultiTypes {Bool = !isAtDestination};
     }
 
     public Structs.MultiTypes NoObstaclesAround(Structs.MultiTypes parameter)
