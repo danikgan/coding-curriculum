@@ -10,6 +10,8 @@ public class Compiler : MonoBehaviour
     public bool PausedExecution_ReadyToRestart = false;
 
     private Enumerations.CompilerStatusEnum _compilerStatus;
+    private ConsolePrinter _console;
+
     public Enumerations.CompilerStatusEnum CompilerStatus
     {
         get { return _compilerStatus; }
@@ -20,6 +22,7 @@ public class Compiler : MonoBehaviour
 
             if (value == Enumerations.CompilerStatusEnum.Runing)
             {
+                _referencesScript.Console.GetComponent<ConsolePrinter>().ResetConsole();
                 _runStopSwitcher.ShowStop();
                 RunCode();
             }
@@ -27,6 +30,7 @@ public class Compiler : MonoBehaviour
             {
                 _runStopSwitcher.ShowRun();
                 StopCode();
+                _referencesScript.Player.GetComponent<CharacterMovement>().GoToStartingPosition();
             }
         }
     }
@@ -41,6 +45,7 @@ public class Compiler : MonoBehaviour
 
         _startProgramCodeBlock = _referencesScript.StartProgramCodeBlock;
         _runStopSwitcher = _referencesScript.RunStopButton.GetComponent<RunStopSwitcher>();
+        _console = _referencesScript.Console.GetComponent<ConsolePrinter>();
     }
 
     void Start()
@@ -58,33 +63,38 @@ public class Compiler : MonoBehaviour
         {
             var codeBlock = PausedExecution_CodeBlock;
             PausedExecution_CodeBlock = null;
-            ExecuteCodeBlocks(codeBlock);
+            var compilingError = ExecuteCodeBlocks(codeBlock);
+            if (compilingError != null)
+            {
+                _console.PushError("Compiling error: " + compilingError);
+            }
         }
         else
         {
-          //  CompilerStatus = Enumerations.CompilerStatusEnum.Stoped;
+            _console.PushText("The execution of your program has got to an end.");
         }
-    }
-
-    void OnMouseDown()
-    {
-        CompilerStatus = (Enumerations.CompilerStatusEnum)(1 - (int) (CompilerStatus));
     }
 
     void RunCode()
     {
+        _console.PushText("Start running program...", "green");
+
         var compilingError = ExecuteCodeBlocks(_startProgramCodeBlock);
         if (compilingError != null)
         {
-            Debug.Log("Compiling error: " + compilingError);        //TODO: Show them to the user
+            _console.PushError("Compiling error: " + compilingError);
         }
     }
 
-    void StopCode()
+    internal void StopCode()
     {
         PausedExecution_ReadyToRestart = false;
         PausedExecution_CodeBlock = null;
-        _referencesScript.Player.GetComponent<CharacterMovement>().GoToStartingPosition();
+    }
+
+    public void ReverseCompilerStatus()
+    {
+        CompilerStatus = (Enumerations.CompilerStatusEnum)(1 - (int)(CompilerStatus));
     }
 
     public string ExecuteCodeBlocks(GameObject startCodeBlock)
@@ -128,7 +138,7 @@ public class Compiler : MonoBehaviour
                     }
                     else
                     {
-                        return "Error: No condition attached to while";
+                        return "You forgot to attach a parameter block to one of the while blocks.";
                     }
                 }
 
@@ -156,7 +166,7 @@ public class Compiler : MonoBehaviour
                     }
                     else
                     {
-                        return "Error: No condition attached to if";
+                        return "You forgot to attach a parameter block to one of the if blocks.";
                     }
                 }
 
@@ -196,7 +206,8 @@ public class Compiler : MonoBehaviour
                             PausedExecution_CodeBlock = currentCodeBlock;
                         }
                         PausedExecution_ReadyToRestart = false;
-                        return "PausedExecution";
+                       // return "PausedExecution";
+                        return null;
                     }
                 }
 

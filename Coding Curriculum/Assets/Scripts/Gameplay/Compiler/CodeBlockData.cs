@@ -72,8 +72,22 @@ public class CodeBlockData : MonoBehaviour
         {
             case "CanGoForward":
             {
-                //Delegates.EvaluateDelegateType x = sensors.CanGoForward;
                 return sensors.CanGoForward;
+            }
+
+            case "noObstaclesAround":
+            {
+                return sensors.NoObstaclesAround;
+            }
+
+            case "notCanGoForward":
+            {
+                return sensors.NotCanGoForward;
+            }
+
+            case "not_ReachedTarget":
+            {
+                return sensors.NotReachedTarget;
             }
 
             default:

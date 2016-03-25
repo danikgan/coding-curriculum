@@ -7,6 +7,8 @@ public class MovementEvents : MonoBehaviour
 {
     private static GameObject _player ;
     private SceneReferences _referencesScript;
+    private Compiler _compiler;
+    private ConsolePrinter _console;
 
     void Start ()
     {
@@ -17,27 +19,36 @@ public class MovementEvents : MonoBehaviour
             Debug.LogError("Error: Main Camera not found");
 
         _player = _referencesScript.Player;
+        _compiler = _referencesScript.RunStopButton.GetComponent<Compiler>();
+        _console = _referencesScript.Console.GetComponent<ConsolePrinter>();
     }
 
-    public void CheckForReachedDestination()
+    public void CheckForMovementEvents()
     {
         var hitColliders = Physics2D.OverlapPointAll(_player.transform.position);
+
         var isAtDestination = hitColliders.Any(hitCollider => hitCollider.gameObject.transform.parent.gameObject.name.Equals("Finish"));
+        if (isAtDestination)
+        {
+           _compiler.StopCode();
+            StartCoroutine(SwitchLevel());
+            StartCoroutine(WaitForKeyDown(KeyCode.Space));
+            return;
+        }
 
-		if (isAtDestination) {
-
-			StartCoroutine(SwitchLevel());
-			StartCoroutine(WaitForKeyDown(KeyCode.Space));
-		}
+        var isInLava = hitColliders.Any(hitCollider => hitCollider.gameObject.transform.parent.gameObject.name.Equals("Lava"));
+        if (isInLava)
+        {
+            _compiler.CompilerStatus = Enumerations.CompilerStatusEnum.Stoped;
+            _console.PushError("You have fallen into a lava pool and died!");
+        }
     }
 
-	IEnumerator SwitchLevel() {
-
-
+	IEnumerator SwitchLevel()
+    {
 		var mainCamera = GameObject.Find("Main Camera");
 		var fadeTime = mainCamera.GetComponent<FadeOut>().BeginFadeOut(); //begin fading out
 		yield return new WaitForSeconds(fadeTime);
-
 	}
 
 	IEnumerator WaitForKeyDown(KeyCode keyCode)

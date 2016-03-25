@@ -124,7 +124,7 @@ public class CharacterMovement : MonoBehaviour
         //finished, not moving anymore
         _animationManager.SetAnimation(Direction, false);
         _compiler.PausedExecution_ReadyToRestart = true;
-        _movementEvents.CheckForReachedDestination();
+        _movementEvents.CheckForMovementEvents();
         yield return 0;
     }
 }

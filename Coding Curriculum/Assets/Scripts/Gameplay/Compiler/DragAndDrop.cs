@@ -10,6 +10,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private SceneReferences _referencesScript;
     private CodeBlockData _thisCodeBlockDataData;
     private UpdateBlocksPositions _updateBlocksPositionsScript;
+    private ConsolePrinter _console;
 
     void Awake()
     {
@@ -23,6 +24,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         else
             Debug.LogError("Error: Main Camera not found");
         _updateBlocksPositionsScript = _referencesScript.DropArea.GetComponent<UpdateBlocksPositions>();
+        _console = _referencesScript.Console.GetComponent<ConsolePrinter>();
     }
 
 #region DragEvents
@@ -56,8 +58,6 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         //If it has, than we temporarily and unilaterally connect it to the other code blocks
         _updateBlocksPositionsScript.UpdatePositionsTemporarily(gameObject);
         CheckCollisionsWithCodeBlocks();
-        //TODO: Show some visual feedback if there is an error with the colliders. e.g. the CodeBlock becomes
-        //TODO: red if the colliders are not valid and green if it's ok. If no colliders are found, nothing happens.
     }
 
     public void OnEndDrag(PointerEventData eventData)   //Droping the object
@@ -82,7 +82,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if (collidersError != null)
         {
             RemoveCodeBlock();
-            Debug.Log("Positioning error: " + collidersError);     //TODO: Maybe show a message to the user???
+            _console.PushWarning("Positioning error: " + collidersError + " Your code block was removed as a result.");
             return;
         }
 
@@ -98,12 +98,6 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private void ExtractCurrentBlock()
     {
         var currentCodeBlockData = GetComponent<CodeBlockData>();
-
-     /*   if (currentCodeBlockData.ParameterBlock)        //TODO: Improve this. Not at it should be
-        {
-            Destroy(currentCodeBlockData.ParameterBlock);   
-            currentCodeBlockData.ParameterBlock = null;
-        }*/
 
         if (currentCodeBlockData.Type.Equals("Parameter"))
         {
@@ -231,7 +225,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         var touchedColliders = Physics2D.OverlapAreaAll(pointA, pointB);
 
         if (touchedColliders.Length == 0)
-            return "Error: No colliders were touched.";
+            return "No other code blocks were touched. Code blocks have to be attached one to another.";
 
         //The next step is to validate the colliders we've hit. The way we are doing this is by using the <CodeBlock> component inside each code block
         //Also, we are taking into consideration only the two highest (greater y) code blocks
@@ -256,7 +250,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         //In the case in which none of the found colliders are valid, we stop this function
         if (!codeBlockColliderTop)
-            return "Error: No valid colliders were touched.";
+            return "No other valid code blocks were touched. Code blocks have to be attached one to another with respect to the properties of each block.";
 
         var codeBlockDataTop = codeBlockColliderTop.gameObject.GetComponent<CodeBlockData>();
 
@@ -293,7 +287,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             {
                 //If none of the two overlapped blocks don't support parameters, the user should get a visual feedback
                 if (!codeBlockDataBottom.SupportsParameterBlock && !codeBlockDataTop.SupportsParameterBlock)
-                    return "Illegal move. Blocks don't supports parameters";
+                    return "You have tried to attach a parameter block to a block that doesn't support parameters.";
 
                 //If both blocks support parameters, then we just add it to the closer one
                 if (codeBlockDataBottom.SupportsParameterBlock && codeBlockDataTop.SupportsParameterBlock)
@@ -328,7 +322,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         else //One overlapped collider
         {
             if (_thisCodeBlockDataData.Type == "Parameter" && !codeBlockDataTop.SupportsParameterBlock)
-                return "Error: Illegal move. Block doesn't supports parameters";
+                return "You have tried to attach a parameter block to a block that doesn't support parameters.";
 
             //We can attach it above or below the code block
             AttachTemporarilyToCodeBox(_thisCodeBlockDataData, codeBlockColliderTop, codeBlockDataTop,

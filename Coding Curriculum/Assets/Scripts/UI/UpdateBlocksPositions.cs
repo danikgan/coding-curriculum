@@ -1,7 +1,7 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEngine;
 
 public class UpdateBlocksPositions : MonoBehaviour
 {
@@ -32,13 +32,13 @@ public class UpdateBlocksPositions : MonoBehaviour
         _referencesScript = mainCamera.GetComponent<SceneReferences>();
         var _startProgramCodeBlock = _referencesScript.StartProgramCodeBlock;
         BlocksSize = _startProgramCodeBlock.GetComponent<RectTransform>().sizeDelta;
-
-		Indentation = (float) (BlocksSize.x/2.5);
-        SpaceBetweenBlocks = BlocksSize.y + 26;
     }
 
     void Start()
     {
+        Indentation = BlocksSize.x / 4 * _referencesScript.MapScale.x;
+        SpaceBetweenBlocks = BlocksSize.y + 20 * _referencesScript.MapScale.x;
+
         UpdateArea(_referencesScript.StartProgramCodeBlock);
     }
 

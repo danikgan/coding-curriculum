@@ -825,18 +825,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GoForwardBlockPrefab: {fileID: 180390, guid: cf76c034e1af4f042b65a9b2fb063e24, type: 2}
-  GoForwardBlockLimit: 3
+  GoForwardBlockLimit: 1
   CanGoForwardBlockPrefab: {fileID: 197798, guid: 5b56f3fd6d9966741adda75b2c84ed66,
     type: 2}
-  CanGoForwardBlockLimit: 0
+  CanGoForwardBlockLimit: 1
   IfBlockPrefab: {fileID: 191044, guid: 797122b816c34654a9d5ee523150c808, type: 2}
   IfBlockLimit: 0
+  ElseBlockPrefab: {fileID: 104048, guid: 8e61213f71340ef4a9df1fa53ed45e9b, type: 2}
+  ElseBlockLimit: 0
   WhileBlockPrefab: {fileID: 135260, guid: 2141e6e1fed22a24eb8177f68d573762, type: 2}
-  WhileBlockLimit: 0
+  WhileBlockLimit: 1
   TurnLeftBlockPrefab: {fileID: 125664, guid: 14338d6234e8bfb4c910bc2adf33e3c8, type: 2}
   TurnLeftBlockLimit: 0
   TurnRightBlockPrefab: {fileID: 147356, guid: 1919c8212bbd35248a309b692f57c860, type: 2}
   TurnRightBlockLimit: 0
+  NotCanGoForwardBlockPrefab: {fileID: 196736, guid: f6827fae24d594846bafbb24452570ed,
+    type: 2}
+  NotCanGoForwardBlockLimit: 0
+  NoObstaclesAroundBlockPrefab: {fileID: 127136, guid: 13b8d8a217f707f479fc7ad814ebd67c,
+    type: 2}
+  NoObstaclesAroundBlockLimit: 0
+  NotReachedTargetBlockPrefab: {fileID: 101168, guid: 4433fbc4ef0a4894ca845f70b53a6939,
+    type: 2}
+  NotReachedTargetBlockLimit: 0
 --- !u!114 &11492016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1170,7 +1181,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 57.3, y: -34.699997}
+  m_AnchoredPosition: {x: 79, y: -43}
   m_SizeDelta: {x: 134, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22449758

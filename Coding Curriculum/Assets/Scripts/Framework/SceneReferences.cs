@@ -10,6 +10,7 @@ public class SceneReferences : MonoBehaviour
     public GameObject Player;
     public GameObject RunStopButton;
     public GameObject Map;
+    public GameObject Console;
 
     public Vector3 MapScale
     {
@@ -25,6 +26,7 @@ public class SceneReferences : MonoBehaviour
         DropArea = GameObject.Find("Drop Area");
         RunStopButton = GameObject.Find("RunStopButton");
         Map = GameObject.Find("Map");
+        Console = GameObject.Find("Console");
         StartProgramCodeBlock = DropArea.transform.FindChild("StartProgram").gameObject;
     }
 }

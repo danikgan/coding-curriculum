@@ -35,8 +35,6 @@ public class FadeIn : MonoBehaviour {
 			System.IO.File.WriteAllText(SaveMaxFilePath, current_level.ToString()); //write maxlevel to savemax file
 
 		Debug.Log (current_level + " current, " + maxlevel + " maximum");
-
-
     }
 
 	void OnGUI()
