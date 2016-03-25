@@ -17,7 +17,6 @@ public class Tutorial : MonoBehaviour {
 
 	public GUISkin tutorial_skin = null; //set up skin
 	public GUIStyle menu_button_style;
-
 	private Vector2 scrollPositionButtons = Vector2.zero; //vector for scroll buttons scroll area
 	private Vector2 scrollPositionText = Vector2.zero; //vector for scroll text  scroll area
 	public static int tutorial_to_display = 1; //which tutorial will be displayed by default

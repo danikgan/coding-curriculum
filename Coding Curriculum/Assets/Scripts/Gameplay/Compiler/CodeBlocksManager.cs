@@ -43,7 +43,7 @@ public class CodeBlocksManager : MonoBehaviour
         }
     }
 
-    private static Dictionary<GameObject, TwoInts> _codeBlocksLimitManager = new Dictionary<GameObject, TwoInts>();
+	private static Dictionary<GameObject, TwoInts> _codeBlocksLimitManager;
 
     private SceneReferences _referencesScript;
     private static RectTransform _dragAreaRectTransform;
@@ -56,6 +56,7 @@ public class CodeBlocksManager : MonoBehaviour
 
     void Start ()
     {
+		_codeBlocksLimitManager = new Dictionary<GameObject, TwoInts>();
         _codeBlocksLimitManager.Add(GoForwardBlockPrefab, new TwoInts(GoForwardBlockLimit, 0));
         _codeBlocksLimitManager.Add(CanGoForwardBlockPrefab, new TwoInts(CanGoForwardBlockLimit, 0));
         _codeBlocksLimitManager.Add(IfBlockPrefab, new TwoInts(IfBlockLimit, 0));

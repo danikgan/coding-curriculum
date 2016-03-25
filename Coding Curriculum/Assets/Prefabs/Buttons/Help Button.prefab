@@ -70,6 +70,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efceb2e11e0e84abc90b12549d2e9785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  background_popup: {fileID: 2800000, guid: 0b07c6481e92f465fbac5f23e11e61a5, type: 3}
+  content_popup: {fileID: 0}
 --- !u!212 &21276816
 SpriteRenderer:
   m_ObjectHideFlags: 1
