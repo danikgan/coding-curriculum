@@ -959,7 +959,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22488474, guid: 6ea01e2770908b14c9a577da015f7f33, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 74
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22487800, guid: 6ea01e2770908b14c9a577da015f7f33, type: 2}
       propertyPath: m_RootOrder

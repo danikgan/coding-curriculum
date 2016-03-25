@@ -664,6 +664,10 @@ Prefab:
       propertyPath: button_style.m_Alignment
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 11418074, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
+      propertyPath: content_popup
+      value: 
+      objectReference: {fileID: 2800000, guid: 7103e450414d4415ab30181fc09cc34f, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 07a43831cdb5fb34fb7b434b27bb2edc, type: 2}
   m_IsPrefabParent: 0
